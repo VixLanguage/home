@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vix Documentation</title>
+    <link rel="icon" href="images/logo.png" type="imagef/png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-purple: #68009d;
+            --accent-purple: #a855f7;
+            --text-gray: #b0b0b0;
+            --code-bg: #1a1a2e;
+            --nav-height-lg: 80px;
+            --nav-height-sm: 60px;
+            --bg-dark: #0a0a1a;
+            --success-green: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #000000 50%, #000000 100%);
+            background-attachment: fixed;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(104, 0, 157, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(74, 89, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(121, 23, 177, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* --- Sticky Header --- */
+        .top_frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height-lg);
+            border-bottom: 2px solid var(--primary-purple);
+            background: linear-gradient(90deg, rgba(20, 20, 30, 0.95) 0%, rgba(30, 15, 50, 0.9) 50%, rgba(20, 20, 30, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(104, 0, 157, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            box-sizing: border-box;
+            z-index: 1000;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .top_frame::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #68009d 20%, #a855f7 50%, #68009d 80%, transparent 100%);
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        /* Scrolled State */
+        body.scrolled .top_frame {
+            height: var(--nav-height-sm);
+            padding: 0 20px;
+            border-bottom-width: 1px;
+        }
+
+        body.scrolled .top_frame::after {
+            opacity: 0;
+        }
+
+        /* Logo Area */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: opacity 0.4s ease, transform 0.4s ease, width 0.4s ease;
+            opacity: 1;
+            width: auto;
+            transform: translateX(0);
+            cursor: pointer;
+        }
+
+        body.scrolled .logo-container {
+            opacity: 0;
+            transform: translateX(-20px);
+            width: 0;
+            margin: 0;
+            padding: 0;
+            pointer-events: none;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: none;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-family: 'Orbitron';
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+            filter: drop-shadow(0 0 10px rgba(104, 0, 157, 0.5));
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        /* Used for the image tag specifically */
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.8));
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation */
+        .nav-center {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            transition: all 0.4s ease;
+        }
+
+        /* Collapsible Sidebar Styles */
+        .sidebar-section {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-h2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--accent-purple);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-h2 .arrow {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            font-size: 18px;
+            color: var(--accent-purple);
+        }
+
+        .sidebar-section.expanded .sidebar-h2 .arrow {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-h2:hover {
+            background: rgba(168, 85, 247, 0.1);
+            color: white;
+            border-left-color: var(--accent-purple);
+        }
+
+        .sidebar-h2.active {
+            background: rgba(168, 85, 247, 0.2);
+            color: white;
+            border-left-color: var(--accent-purple);
+        }
+
+        .sidebar-sublist {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-left: 30px;
+        }
+
+        .sidebar-section:not(.expanded) .sidebar-sublist {
+            max-height: 0;
+        }
+
+        .sidebar-section.expanded .sidebar-sublist {
+            max-height: 500px;
+        }
+
+        .sidebar-h3 {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            margin-bottom: 5px;
+            border-left: 2px solid transparent;
+        }
+
+        .sidebar-h3:hover {
+            background: rgba(168, 85, 247, 0.1);
+            color: white;
+            border-left-color: var(--accent-purple);
+            transform: translateX(5px);
+        }
+
+        .sidebar-h3.active {
+            background: rgba(168, 85, 247, 0.15);
+            color: white;
+            border-left-color: var(--accent-purple);
+        }
+
+        .nav_button {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            position: relative;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .nav_button::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #68009d, #a855f7);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .nav_button:hover {
+            color: #fff;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+        }
+
+        .nav_button:hover::before {
+            width: 80%;
+        }
+
+        .nav_button.active {
+            color: #fff;
+        }
+
+        .nav_button.active::before {
+            width: 80%;
+        }
+
+        /* User Buttons */
+        .user-buttons {
+            display: flex;
+            gap: 15px;
+            transition: all 0.4s ease;
+        }
+
+        .user_button {
+            background: transparent;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: var(--accent-purple);
+            font-size: 14px;
+            cursor: pointer;
+            padding: 6px 18px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .user_button:hover {
+            color: #fff;
+            background: rgba(168, 85, 247, 0.2);
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            margin-top: var(--nav-height-lg);
+            min-height: calc(100vh - var(--nav-height-lg));
+        }
+
+        .sidebar {
+            width: 280px;
+            min-width: 280px;
+            max-width: 280px;
+            flex-shrink: 0;
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(168, 85, 247, 0.2);
+            padding: 30px 20px;
+            position: sticky;
+            top: var(--nav-height-lg);
+            height: calc(100vh - var(--nav-height-lg));
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-purple) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: var(--primary-purple);
+            border-radius: 3px;
+        }
+
+        .sidebar h3 {
+            color: var(--accent-purple);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            margin-bottom: 15px;
+            margin-top: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sidebar h3:first-child { margin-top: 0; }
+
+        .sidebar-link {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            margin-bottom: 5px;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(168, 85, 247, 0.1);
+            color: white;
+            border-left-color: var(--accent-purple);
+            transform: translateX(5px);
+        }
+
+        .sidebar-link.active {
+            background: rgba(168, 85, 247, 0.2);
+            color: white;
+            border-left-color: var(--accent-purple);
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 60px 80px;
+            max-width: 1200px;
+        }
+
+        .doc-header {
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .doc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            background: linear-gradient(135deg, #ffffff 0%, #d5a8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .doc-subtitle {
+            color: var(--text-gray);
+            font-size: 18px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 80px;
+            scroll-margin-top: 100px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-purple);
+            font-size: 32px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h2::before {
+            content: '▹';
+            color: var(--primary-purple);
+            font-size: 1.2em;
+        }
+
+        .section h3 {
+            color: #d5a8ff;
+            font-size: 22px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+        }
+
+        .section h4 {
+            color: #fff;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            color: #e0e0e0;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .section ul, .section ol {
+            color: #e0e0e0;
+            margin-left: 30px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .section a {
+            color: var(--accent-purple);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .section a:hover {
+            text-decoration: underline;
+            color: #fff;
+        }
+
+        .install-btn {
+            background: linear-gradient(135deg, #1307ff, #4a59ff);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .install-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .install-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .installer-window {
+            background: rgba(20, 20, 35, 0.95);
+            border: 1px solid var(--accent-purple);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(104, 0, 157, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        .modal-overlay.active .installer-window {
+            transform: scale(1);
+        }
+
+        .installer-header h3 {
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 10px;
+        }
+
+        .installer-status {
+            color: var(--text-gray);
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            margin-bottom: 20px;
+            min-height: 20px;
+        }
+
+        .progress-track {
+            background: rgba(255, 255, 255, 0.1);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-purple), var(--accent-purple));
+            border-radius: 5px;
+            transition: width 0.2s ease;
+            box-shadow: 0 0 10px var(--accent-purple);
+        }
+
+        .console-output {
+            background: #000;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: left;
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            color: #a8dadc;
+            height: 120px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .console-line {
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .console-line.success { color: var(--success-green); }
+        .console-line.warn { color: #f1fa8c; }
+        .console-line.info { color: #8be9fd; }
+
+        .close-modal-btn {
+            background: transparent;
+            border: 1px solid var(--accent-purple);
+            color: var(--accent-purple);
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            transition: all 0.2s;
+            display: none; /* Hidden until complete */
+            margin: 0 auto;
+        }
+
+        .close-modal-btn:hover {
+            background: var(--accent-purple);
+            color: white;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: rgba(168, 85, 247, 0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .code-block code {
+            color: #a8dadc;
+            white-space: pre; 
+            display: block;
+        }
+
+        .code-keyword    { color: #ff79c6; font-weight: bold; }
+        .code-function   { color: #50fa7b; }
+        .code-string     { color: #f1fa8c; }
+        .code-comment    { color: #6272a4; font-style: italic; }
+        .code-numeric    { color: #bd93f9; }
+        .code-type       { color: #8be9fd; }
+        .code-const      { color: #ffb86c; }
+        .code-attribute  { color: #ffb86c; }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .copy-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* Info/Warning Boxes */
+        .info-box {
+            background: rgba(74, 89, 255, 0.1);
+            border-left: 4px solid #4a59ff;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 6px;
+        }
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 6px;
+        }
+        .note-box {
+            background: rgba(7, 73, 255, 0.1);
+            border-left: 4px solid #1307ff;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 6px;
+        }
+        .success-box {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: rgba(30, 20, 50, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--accent-purple);
+            padding: 15px;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #e0e0e0;
+        }
+
+        tr:hover {
+            background: rgba(168, 85, 247, 0.05);
+        }
+        
+        /* Modal Styles (Refined) */
+        .modal-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); 
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            opacity: 0; 
+            visibility: hidden; 
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+
+        .installer-window {
+            background: rgba(20, 20, 35, 0.95); 
+            border: 1px solid var(--accent-purple);
+            border-radius: 12px; 
+            width: 90%; 
+            max-width: 500px; 
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(104, 0, 157, 0.5);
+            transform: scale(0.9); 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        .modal-overlay.active .installer-window { 
+            transform: scale(1); 
+        }
+
+        .installer-header h3 { 
+            color: white; 
+            font-family: 'Orbitron', sans-serif; 
+            margin-bottom: 20px; 
+        }
+
+        /* Form Inputs */
+        .form-group { 
+            text-align: left; 
+            margin-bottom: 20px; 
+        }
+        .form-label { 
+            display: block; 
+            color: var(--text-gray); 
+            margin-bottom: 8px; 
+            font-size: 14px; 
+        }
+        .form-select, .form-input {
+            width: 100%; 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: white; 
+            padding: 12px; 
+            border-radius: 6px; 
+            font-family: 'Fira Code', monospace;
+            font-size: 14px; 
+            outline: none; 
+            transition: border-color 0.3s;
+        }
+        .form-select:focus, .form-input:focus { 
+            border-color: var(--accent-purple); 
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); 
+        }
+        .form-input::placeholder { 
+            color: rgba(255,255,255,0.3); 
+        }
+
+        /* Start Install Button */
+        .start-install-btn {
+            width: 100%; 
+            background: var(--accent-purple); 
+            color: white; 
+            border: none;
+            padding: 12px; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer;
+            font-family: 'Orbitron'; 
+            transition: background 0.3s; 
+            text-transform: uppercase;
+        }
+        .start-install-btn:hover { 
+            background: var(--primary-purple); 
+        }
+
+        /* Progress Bar Area */
+        .installer-status { 
+            color: var(--text-gray); 
+            font-family: 'Fira Code', monospace; 
+            font-size: 14px; 
+            margin-bottom: 20px; 
+            min-height: 20px; 
+        }
+        .progress-track { 
+            background: rgba(255, 255, 255, 0.1); 
+            height: 10px; 
+            border-radius: 5px; 
+            overflow: hidden; 
+            margin-bottom: 25px; 
+            position: relative; 
+        }
+        .progress-bar { 
+            height: 100%; 
+            width: 0%; 
+            background: linear-gradient(90deg, var(--primary-purple), var(--accent-purple)); 
+            border-radius: 5px; 
+            transition: width 0.2s ease; 
+            box-shadow: 0 0 10px var(--accent-purple); 
+        }
+
+        /* Console Log Output */
+        .console-output {
+            background: #000; 
+            border-radius: 6px; 
+            padding: 15px; 
+            text-align: left;
+            font-family: 'Fira Code', monospace; 
+            font-size: 12px; 
+            color: #a8dadc;
+            height: 120px; 
+            overflow-y: auto; 
+            margin-bottom: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .console-line { 
+            display: block; 
+            margin-bottom: 4px; 
+        }
+        .console-line.success { color: #10b981; } /* Green */
+        .console-line.warn { color: #f1fa8c; } /* Yellow */
+        .console-line.info { color: #8be9fd; } /* Blue */
+
+        /* Finish Button */
+        .close-modal-btn {
+            background: transparent; 
+            border: 1px solid var(--accent-purple); 
+            color: var(--accent-purple);
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold; 
+            transition: all 0.2s; 
+            display: none; /* Hidden until done */
+            margin: 0 auto;
+        }
+        .close-modal-btn:hover { 
+            background: var(--accent-purple); 
+            color: white; 
+        }
+
+        .hidden { 
+            display: none !important; 
+        }
+
+        .cancel-install-btn {
+            width: 100%; 
+            background: transparent; 
+            border: 1px solid #555; 
+            color: #ccc; 
+            padding: 12px; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer;
+            font-family: 'Roboto'; 
+            transition: all 0.3s; 
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+        .cancel-install-btn:hover { 
+            border-color: #fff; 
+            color: #fff; 
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            }
+            .content-area {
+                padding: 30px 20px;
+            }
+            .nav-center {
+                display: none;
+            }
+            .top_frame {
+                justify-content: center;
+            }
+            .doc-title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="top_frame">
+        <div class="logo-container" onclick="window.location.href='https://vixlanguage.github.io'">
+            <div class="logo">
+                <img src="images/logo.png" alt="Vix Logo" class="logo-img" onerror="this.src='https://picsum.photos/seed/vixlogo/50/50.jpg'">
+            </div>
+            <div class="logo-text">VIX Updates</div>
+        </div>
+
+        <div class="nav-center">
+            <button class="nav_button" onclick="window.location.href='https://vixlanguage.github.io/home/src/docs/docs.html'">Docs</button>
+            <button class="nav_button active">Update</button>
+            <button class="nav_button" onclick="window.location.href='https://vix.dev'">Website</button>
+            <button class="nav_button" onclick="window.location.href='https://vix.dev/marketplace'">Marketplace</button>
+            <button class="nav_button" onclick="window.location.href='https://discord.gg/CAemjRc4ya'">Community</button>
+        </div>
+
+        <div class="user-buttons">
+            <button class="user_button">v3.5 Alpha</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h3>Alpha</h3>
+            <a href="#alpha-1-0" class="sidebar-link active">Alpha 1.0</a>
+            <a href="#alpha-1-5" class="sidebar-link">Alpha 1.5</a>
+            <a href="#alpha-1-75" class="sidebar-link">Alpha 1.75</a>
+            <a href="#alpha-2-0" class="sidebar-link">Alpha 2.0</a>
+            <a href="#alpha-2-5" class="sidebar-link">Alpha 2.5</a>
+            <a href="#alpha-3-0" class="sidebar-link">Alpha 3.0</a>
+            <a href="#alpha-3-25" class="sidebar-link">Alpha 3.25</a>
+            <a href="#alpha-3-5" class="sidebar-link">Alpha 3.5</a>
+            <a href="#alpha-4-0" class="sidebar-link">Alpha 4.0</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h3>Pre Beta</h3>
+            <a href="#pre-beta-1-0" class="sidebar-link">Pre-Beta 1.0</a>
+            <a href="#pre-beta-2-0" class="sidebar-link">Pre-Beta 2.0</a>
+            <a href="#pre-beta-3-0" class="sidebar-link">Pre-Beta 3.0</a>
+            <a href="#pre-beta-4-0" class="sidebar-link">Pre-Beta 4.0</a>
+            <a href="#pre-beta-5-0" class="sidebar-link">Pre-Beta 5.0</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h3>Beta</h3>
+            <a href="#beta-1-0" class="sidebar-link">Beta 1.0</a>
+            <a href="#beta-2-0" class="sidebar-link">Beta 2.0</a>
+            <a href="#beta-3-0" class="sidebar-link">Beta 3.0</a>
+            <a href="#beta-4-0" class="sidebar-link">Beta 4.0</a>
+            <a href="#beta-5-0" class="sidebar-link">Beta 5.0</a>
+        </div>
+        
+        <div class="sidebar-section">
+            <h3>Resources</h3>
+            <a href="#community" class="sidebar-link">Community & Support</a>
+        </div>
+    </aside>
+        <main class="content-area">
+            <div class="doc-header">
+                <h1 class="doc-title">VIx Updates</h1>
+                <p class="doc-subtitle">Modern. Safe. Performant. The complete guide to the Vix programming language.</p>
+            </div>
+
+            <section class="section" id="intro">
+                <h2>Introduction</h2>
+                <p>
+                    Vix is a modern programming language designed to balance performance, memory safety, and developer productivity. It combines the speed of C with the safety features of modern languages, making it suitable for both low-level system programming and high-level application development.
+                </p>
+                
+                <div class="warning-box">
+                    <strong>Current Status:</strong> Alpha version. Expect breaking changes as we rapidly iterate towards stability.
+                </div>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>Performance:</strong> Compiles to C, then to LLVM using Clang. Achieves C-level performance with SSA optimizations.</li>
+                    <li><strong>Safety:</strong> Immutable variables by default, no <code>null</code> (uses <code>None</code>), built-in <code>Option</code> and <code>Result</code> types.</li>
+                    <li><strong>Developer Experience:</strong> Simple syntax using <code>end</code> keyword instead of braces. Beginner-friendly design.</li>
+                    <li><strong>Interoperability:</strong> Seamless integration with C/C++ libraries.</li>
+                </ul>
+            </section>
+
+
+            <section class="section" id="alpha-1-5">
+                <h2>Update Alpha 1.5</h2>
+                <li><strong>Bug fixing</strong> 
+                            <ul>
+                                <li>Error handler was showing false errors</li>
+                                <li>Turple was generating wrong IR</li>
+                                <li>Ok() build in function is not generating</li>
+                            </ul>
+                </li>
+                <div class="code-block" data-lang="vix">
+                    <code>
+struct Math:
+    name = str
+    age = int
+end
+
+impl Math(input_name: str, input_age: int):
+    Math(name = input_name, age = input_age)
+                
+    func add(mut self, input_name: str, input_age: int): void
+        self.name += input_name
+        self.age += input_age
+    end
+
+    func return_data(self): result[(str | int), str]
+        return Ok((self.name, self.age))
+    end
+end
+
+func main(): int
+    math: Math = Math("Hello", 10)
+end
+                    </code>
+                </div>
+                <p>
+                This example script is returning errors about "undefined variable", "name/age" are not being detected by <strong>Error handler</strong> as a <strong>struct filed</strong> and that what make the error. Even the C code are generated correct and contain no errors about "name/age" however 
+                </p>
+                <div class="code-block" data-lang="clang">
+                    <code>
+typedef struct Math {
+    struct { char* ptr; int64_t len; } name;
+    int32_t age;
+} Math;
+
+Math Math_new(String param_input_name, int32_t param_input_age) {
+    Math instance;
+    instance.name = param_input_name;
+    instance.age = param_input_age;
+    return instance;
+}
+                    </code>
+                </div>
+                
+<p><strong>Error handler</strong> was returning a error about "name/age" are "undefined variable" this bug as ben fixed and now error handler never trigger <strong>struct filed</strong> as <strong>variables</strong>.</p>
+<div class="code-block" data-lang="toml">
+                    <code>
+    [Error]: UndefinedVariable Error:
+   | src\main.x:0
+   |
+   |
+   ------------------------------------------------------------------------
+   |-> help:
+    Cannot perform compound assignment on undefined variable 'name'.
+   |
+   |-> suggestions:
+    - Declare 'name' before using compound assignment
+                    </code>
+                </div>
+
+                <li>
+                    Turple was generating wrong IR:
+                </li>
+
+            <div class="code-block" data-lang="c">
+                <code>
+Tuple_int32_int32 t13 = { ._0 = t11, ._1 = t12 };
+                </code>
+            </div>
+<li>
+    <a href="#" class="blue-link"><strong>Ok()</strong> build in function</a> function is not generating. Always <a href="#" class="blue-link">codegen_call_expr</a>, the map the string <strong>Ok</strong> to <a href="#" class="blue-link">codegen_result_ok</a>, However, when the compiler parser generates the AST for Ok(...), it creates an Expr::ResultOk, not an Expr::Call("ok", ...). This what coust the error
+</li>
+
+            </section>
+            <section class="section" id="alpha-1-75">
+                <h2>Update Alpha 1.75</h2>
+                <li><strong>Bug fixing</strong> 
+                            <ul>
+                                <li><strong>const str</strong> was generating wrong C IR. Before it was generating same IR as normal str. Problem fixed by making it generate:</li>
+                                <li><strong>str</strong> Turple was generating wrong IR</li>
+                                <li><strong>codegen_var</strong>was generating wrong error about <strong>Unknow variable</strong></li>
+                                <li><strong>Print</strong> was output wrongly <strong>÷"\1÷</strong> beacuse was using <strong>%d<strong> for strings</li>
+                            </ul>
+                </li>
+                <li><a href="#" class="blue-link">codegen_var</a> was generating <strong>error</strong> for better error handling that has been removed and added a error handling in IR generating: and problem of <strong>Unknow variable</strong> is fixed now codegen_var should detect all vars without any problems</li>
+                <div class="code-block" data-lang="c">
+                        <code>
+const char* var_example = t2.ptr;
+                        </code>
+                    </div>
+                <li><strong>const str</strong>was generating wrong C IR. Before it was generating same IR as normal str. Problem fixed by making it generate</li>
+                <div class="code-block" data-lang="rust">
+                        <code>
+    self.diagnostics.error(
+        "UndefinedVariable",
+        &format!("Variable '{}' has not been declared in this scope.", name),
+        ErrorContext {
+            primary_location: loc.clone(),
+            secondary_locations: vec![],
+            help_message: Some(format!(
+                "Cannot find variable '{}' in the current scope.", 
+                name
+            )),
+            suggestions: vec![
+                format!("Declare '{}' before using it", name),
+                format!("Use 'let {} = ...' to declare and initialize", name),
+                "Check for typos in the variable name".to_string(),
+            ],
+        }
+    );                        </code>
+                    </div>
+                <p>
+                <li><strong>Print</strong> was generating a wrong output like: "÷"\1÷" beacuse it's using <a href="#" class="blue-link">%d</a> for string problem has been fixed by making print use <a href="#" class="blue-link">%d</a> only for numbers. Now print uses <a href="#" class="blue-link">%s</a></li>
+                <div class="code-block" data-lang="c">
+                    <code>
+String t1 = { .ptr = "\n", .len = 10 };
+int32_t t10 = printf("%s\n", t1.ptr);
+                    </code>
+                </div>
+
+                </section>
+
+
+            </section>
+            <section class="section" id="alpha-2-0">
+                <h2>Update Alpha 2.0</h2>
+                <li><strong>Bug fixing</strong> 
+                            <ul>
+                                <li><strong>New build in function</strong> was Added is <a href="#" class="blue-link">format</a></li>
+                                <li><strong>Libraries</strong> can be used their functions/implements etc... like this: <strong>var.is_number</strong> same goes to your functions too</li>
+                                <li><strong>codegen_var</strong>was generating wrong error about <strong>Unknow variable</strong></li>
+                                <li><strong>Print</strong> was output wrongly <strong>÷"\1÷</strong> beacuse was using <strong>%d<strong> for strings</li>
+                            </ul>
+                </li>
+                <li><a href="#" class="blue-link">format</a> build in function example </li>
+                
+                <div class="code-block" data-lang="vix">
+                        <code>
+create name = "kat"
+create age = 20
+
+plan("Hello, what is your name {} and how old are you? are you {}, name, age)
+                        </code>
+                    </div>
+                    <p>
+                    You can use <a href="#" class="blue-link">format</a> in <a href="#" class="blue-link">if staitment</a> too
+                    </p>
+                    
+                <li><strong>Libraries & functions</strong> can be use their functions/implements/param etc... like this: "i.is_number" same goes to your functions too:</li>
+                <div class="code-block" data-lang="vix">
+                        <code>
+func is_number(input: int)
+    return true
+end
+
+func example(input1: int, input2: int)
+end
+
+create i = 10
+
+// here "()" are optional:
+if i.is_number then
+    i.example(10) // "i" is "input1" and "10 is input2"
+end
+                        </code>
+                    </div>
+                <p>
+
+                </section>
+                
+            </section>
+            <section class="section" id="alpha-2-5">
+                <h2>Update Alpha 2.5</h2>
+                <li><strong>Bug fixing</strong> 
+                            <ul>
+                                <li><strong>mut</strong> keyword included and everything is <a href="#" class="blue-link">immutable by default</a></li>
+                                <li><strong>Libraries</strong> import keyword included for implemting <strong>public enum/struct/func </strong></li>
+                            </ul>
+                </li>
+                <li><a href="#" class="blue-link">mut</a> keyword included </li>
+                
+                <div class="code-block" data-lang="vix">
+                        <code>
+create mut mutable_filed: int = 100
+create immutable_filed: int = 500
+
+print(immutable_filed) // will print 500
+immutable_filed += 10 // Error: variable is immutable use "mut" keyword to make it mutable
+mutable_filed += 10
+
+print(mutable_filed) // will print 110
+                        </code>
+                    </div>
+                    
+                <li><strong>import</strong> keyword included for implemting public enum/struct/func</li>
+                <div class="code-block" data-lang="vix">
+                        <code>
+import ExampleStruct from "src/main.vix"
+import someFunction, anotherfunction from "src/example.vix"
+import * from "src/all_script.vix" // import everything public inside it
+import "src/somescript" as somescript
+
+somescript.somefunction(10, 50)
+someFunction("Hello world")
+examplestruct = ExampleStruct(filed1: 0, filed2: "")
+                        </code>
+                    </div>
+                <p>
+
+                </section>
+
+                
+<section class="section" id="alpha-3-0">
+    <h2>Update Alpha 3.0</h2>
+    <p>
+        Update made to fix numerous bugs that were discovered. Implemented many new functions and memory management features. Started working on error handling, and new features like an "interpreter VM" are being planned. Enhanced error handling and memory safety. Now <strong>FFI</strong> requires <strong>unsafe blocks</strong>, and the standard library will be developed with <strong>Vix</strong> itself. Major compiler cleanup completed.
+    </p>
+
+    <h3>Interpreter VM</h3>
+    <p>
+        Vix is known as a compiled language that generates C IR and uses <strong>clang</strong> for compiling to machine code. However, this process can be slow. If you want to fix bugs/errors quickly without waiting for lengthy compilation every time, you can use the <strong>Vix Interpreted VM</strong>. It doesn't generate compiled applications like <strong>.exe</strong> files—it simply runs your code inside a VM (interpreted), using LLVM and clang to make this possible. This implementation is still in the planning and prototype stages, and there's no guarantee it's 100% coming. If you want to help us make this possible, let us know in "issues".
+    </p>
+
+    <h3>Compiler Updates</h3>
+    <p>
+        Every compiled update like "3.0v"/"2.0v" includes a major cleanup—cleaning up the mess, deleting unusable functions, etc.
+    </p>
+    <ul>
+        <li>Removing dead functions/code that are no longer usable:</li>
+    </ul>
+    <div class="code-block" data-lang="rust">
+        <code>pub fn alignment(&self, arch: &ArchConfig) -> usize {}</code>
+    </div>
+
+    <h4>Variables Handling Changes</h4>
+    <p>Variables are now being handled differently. Previously, all variables were treated as normal variables:</p>
+    <div class="code-block" data-lang="c">
+        <code>struct SliceStr {
+    
+} SliceStr_int_str</code>
+    </div>
+
+    <h3>Bugs Fixed</h3>
+    <p>
+        Not many bugs were found in this update, but one major issue was that function parameters were generating incorrect IR:
+    </p>
+    <div class="code-block" data-lang="vix">
+        <code>func example(i: int[3])
+end
+
+example([10, 50, 30])</code>
+    </div>
+    <p>Was generating:</p>
+    <div class="code-block" data-lang="c">
+        <code>int32_t example(int32_t var_i)</code>
+    </div>
+    <p>
+        This was incorrect. The bug has been fixed by adding a new type handling system for:
+    </p>
+    <ul>
+        <li>Array</li>
+        <li>String</li>
+        <li>Char</li>
+        <li>Const String</li>
+        <li>Any</li>
+    </ul>
+    <p>Using the new <strong>Slice_Type</strong> struct in C IR:</p>
+    <div class="code-block" data-lang="c">
+        <code>typedef struct {
+    char* ptr;
+    size_t len;
+} Slice_char;</code>
+    </div>
+    <p>
+        This generates correct IR and provides a good balance with more safety and high performance.
+    </p>
+
+    <h3>New Error Handling</h3>
+    <p>
+        After 3 votes on our <a href="https://discord.gg/VgxSzj4fBQ" target="_blank">Discord server</a> between <strong>try/catch</strong> or <strong>?</strong>, the <strong>?</strong> operator was selected.
+    </p>
+
+    <h3>New Implementations</h3>
+    <p>Many new implementations in this update:</p>
+
+    <h4>Fixed Array</h4>
+    <div class="code-block" data-lang="vix">
+        <code>create mut temp: Array[uint8] = [0; 1024]</code>
+    </div>
+    <p>Very useful for system programming and is used in standard libraries.</p>
+
+    <h4>HashMap</h4>
+    <div class="code-block" data-lang="vix">
+        <code>mut friends = {
+    ["Example:"] = (15, -10),
+    ["YourFriend"] = (20, 104)
+}</code>
+    </div>
+
+    <h4>New Built-in Functions</h4>
+    <ul>
+        <li><code>.as_bytes()</code> - Convert your data to bytes</li>
+        <li><code>.as_ptr()</code> - Convert your data to a pointer</li>
+        <li><code>.as_mut_ptr()</code> - Convert your data to a mutable pointer</li>
+    </ul>
+
+    <h4>New Error & Memory Management</h4>
+    <div class="code-block" data-lang="vix">
+        <code>
+// this function has "Result" and can return "ok" or "err".
+func some_function(input: Option[str]): Result[T: str, E: str]
+    input.unwrap_or(
+        return Err("Failed to unwrap string aka: string is a none")
+    )
+
+    Ok(input)
+end
+
+# When we send "None" it will return an error
+if Ok(output) = some_function(None) then
+
+end
+
+print("No! function is not okay, it's returning an error")
+if Err(err) = some_function(None) then
+    print("We got it the error is", err)
+end</code>
+    </div>
+
+    <p>But functions can return <strong>None</strong>. You can fix this by:</p>
+    <div class="code-block" data-lang="vix">
+        <code>func other_function(): Result[Option[int32], str]
+    return Ok(None)
+end
+
+if Some(output) = other_function() then
+    # ...
+end</code>
+    </div>
+
+    <p>If you want to just get the output:</p>
+    <div class="code-block" data-lang="vix">
+        <code>func example_function(): int32
+    return 10
+end
+
+if let(output) = example_function() then
+    print(output)
+end</code>
+    </div>
+
+    <p>
+        The full update added <code>let()</code>, <code>Some()</code>, <code>Err()</code>, and <code>Ok()</code> for the "if" statement for more safety and better memory management. You can ignore the error or output using "_" like this:
+    </p>
+    <div class="code-block" data-lang="vix">
+        <code>if Ok(_) = example_function() then
+    print("function is successful")
+end
+
+if Err(_) = example_function() then
+    print("function just failed")
+end</code>
+    </div>
+
+    <h3>Deep Explanation & Examples</h3>
+
+    <h4>.as_bytes() - Converting to Byte Slices</h4>
+    <p>
+        Vix uses this to convert string data into a slice of bytes <code>(&[u8])</code>, providing a view of the underlying UTF-8 encoded data. It's useful for network programming (which requires sending raw bytes), I/O operations that work with raw bytes, and cryptographic operations (hashing, encryption), and much more.
+    </p>
+    <div class="code-block" data-lang="vix">
+        <code>create txt = "Hello"
+bytes = txt.as_bytes() # &[u8] = [72, 101, 108, 108, 111]</code>
+    </div>
+    <p>Strings in Vix are always UTF-8. <code>as_bytes</code> gives you:</p>
+    <ul>
+        <li>Safe, zero-cost view of that UTF-8 data</li>
+        <li>Non-copying with no overhead—you're just viewing the same memory with a different type</li>
+        <li>Returns an immutable reference <code>(&[u8])</code></li>
+    </ul>
+
+    <h4>.as_ptr() - Getting a Raw Immutable Pointer</h4>
+    <p>
+        Vix uses this to return a raw pointer <code>(*const T)</code> to the first element of the data, giving you direct memory access. Common usage includes: FFI with C/C++, passing data to system calls, low-level memory operations, and performance-critical code where you need to bypass bounds checking.
+    </p>
+    <div class="code-block" data-lang="vix">
+        <code>create numbers = [1, 2, 3, 4, 5]
+create ptr: *const int32 = numbers.as_ptr();
+
+unsafe:
+    print("First element:", *ptr)
+end</code>
+    </div>
+    <ul>
+        <li>Returns <code>*const T</code> (immutable raw pointer)</li>
+        <li>The pointer points to the first element in the data</li>
+        <li>The pointer is only valid while the original data exists</li>
+    </ul>
+    <div class="warning-box">
+        <strong>Warning:</strong>
+        <ul>
+            <li>Requires unsafe blocks to run and use</li>
+            <li>If the pointer is empty, you'll get a non-null dangling pointer that can easily crash your program or corrupt your memory!</li>
+            <li>Ensure the data isn't moved or dropped</li>
+            <li>Violating aliasing rules (multiple mutable accesses) is undefined behavior</li>
+        </ul>
+    </div>
+
+    <h4>.as_mut_ptr() - Getting a Raw Mutable Pointer</h4>
+    <p>
+        Vix uses this to return a raw mutable pointer <code>(*mut T)</code>, allowing direct memory modification without Rust's borrow checker oversight. Like <code>as_ptr()</code>, it has mostly the same usage in: FFI with C, implementing custom data structures, performance-critical code with manual memory management, and interfacing with hardware or memory-mapped I/O.
+    </p>
+    <div class="code-block" data-lang="vix">
+        <code>create mut numbers = [1, 2, 3, 4, 5]
+create ptr: *mut int32 = numbers.as_mut_ptr();
+
+unsafe:
+    *ptr = 100
+    *ptr.slot(1) = 200
+end
+
+print(numbers)</code>
+    </div>
+    <ul>
+        <li>Returns <code>*mut T</code> (mutable raw pointer)</li>
+        <li>Requires mutable access to the original data (<code>.as_mut_ptr()</code> needs <code>&mut self</code>)</li>
+    </ul>
+    <div class="warning-box">
+        <strong>Warning:</strong>
+        <ul>
+            <li>More dangerous than <code>.as_ptr()</code> because it allows modification</li>
+            <li>No aliasing: Don't create multiple mutable references to the same memory</li>
+            <li>Bounds checking: You're responsible for staying within valid memory</li>
+        </ul>
+    </div>
+
+    <h3>Comparison Table</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Function</th>
+                <th>Returns</th>
+                <th>Mutability</th>
+                <th>Safety</th>
+                <th>Common Use Case</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>.as_bytes()</code></td>
+                <td><code>&[u8]</code></td>
+                <td>Immutable</td>
+                <td>Safe</td>
+                <td>String → bytes conversion</td>
+            </tr>
+            <tr>
+                <td><code>.as_ptr()</code></td>
+                <td><code>*const T</code></td>
+                <td>Immutable</td>
+                <td>Unsafe</td>
+                <td>FFI, reading raw memory</td>
+            </tr>
+            <tr>
+                <td><code>.as_mut_ptr()</code></td>
+                <td><code>*mut T</code></td>
+                <td>Mutable</td>
+                <td>Unsafe</td>
+                <td>FFI, modifying raw memory</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Library Updates</h3>
+    <p>
+        Library creation now supports <strong>public mod</strong> blocks, and you can use them like: <code>my_lib.Custom_Mod.some_function()</code>. Example:
+    </p>
+    <div class="code-block" data-lang="vix">
+        <code>public mod Example:
+    func red():
+        return (255, 0, 0)
+    end
+
+    func green():
+        return (0, 255, 0)
+    end
+end</code>
+    </div>
+
+    <h4>Example Usage</h4>
+    <div class="code-block" data-lang="vix">
+        <code>import example_lib
+
+func main():
+    print(example_lib.Example.red("Hello world"))
+end</code>
+    </div>
+
+    <p><strong>Release Date:</strong> 1/10/2026</p>
+</section>
+
+
+<section class="section" id="alpha-3-25">
+    <h2>Update Alpha 3.25</h2>
+    <p>
+        This update contains fixes for 3 main bugs and 5 additional bugs that were making Vix unusable and could lead to problems in the future. Special thanks to <a href="https://github.com/nevakrien" target="_blank">nevakrien</a> for reporting critical problems in Vix!
+    </p>
+
+    <h3>Bugs Fixed</h3>
+
+    <h4>First Main Bug: Empty Tuple Generation</h4>
+    <p>
+        The first major bug in "Tuple" generation was not allowing <strong>()</strong> (empty tuple). This caused problems. When you created an empty tuple before this bug was fixed, it would always generate:
+    </p>
+    <div class="code-block" data-lang="c">
+        <code>typedef struct {
+    void field_0; // "field_0" is forbidden "void"
+    Slice_char field_1;
+} Tuple_void_char8;</code>
+    </div>
+    <p>
+        This was incorrect. We have fixed this bug and now it allows empty tuples <strong>()</strong>:
+    </p>
+    <div class="code-block" data-lang="vix">
+        <code>func example(): Result[(), str]
+    Ok() # Now works fine!
+    Err("some err") # Works too!
+end</code>
+    </div>
+
+    <h4>Second Main Bug: Malloc Null Pointer Issue</h4>
+    <p>
+        The second main bug is a really dangerous one because it can lead to your program exhibiting random behavior. We use <code>malloc()</code> for many things, from built-in functions to features inside the language. Thanks to <a href="https://github.com/nevakrien" target="_blank">nevakrien</a> for finding this bug.
+    </p>
+    <p>
+        Malloc can return <code>null</code>, which will cause many problems like random behavior, crashes, etc. We have fixed this by adding a checker function to ensure it's not <code>null</code>:
+    </p>
+    <div class="code-block" data-lang="c">
+        <code>void* vix_alloc(size_t s){
+    void* ans = malloc(s);
+    // we going to add better error handling in future. But for now this is the function to at least remove this problem
+    if(!ans) exit(1);
+    return ans;
+}</code>
+    </div>
+
+    <h4>Third Main Bug: Enum Field Syntax</h4>
+    <p>
+        Enums previously could not generate <code>Something(field1: type, field2: type)</code>. This happened because the parser never parsed that syntax. This has been fixed.
+    </p>
+    <p>Now when you do:</p>
+    <div class="code-block" data-lang="vix">
+        <code>enum Test:
+    Player(name: str, health: int)
+end
+
+func main(): Test
+    return Player.Test(
+        name: "Player 1",
+        health: 100
+    )
+end</code>
+    </div>
+    <p>It generates correct code:</p>
+    <div class="code-block" data-lang="c">
+        <code>typedef struct Test_Player_Payload {
+    Slice_char name;
+    int32_t health;
+} Test_Player_Payload;
+
+Test_Player_Payload Test_Player_Payload_new(Slice_char name, int32_t health);
+
+typedef enum {
+    Test__Player = 0,
+} TestTag;
+
+typedef struct {
+    TestTag tag;
+    union {
+        Test_Player_Payload Player;
+    } data;
+} Test;
+
+int32_t vix_main();
+
+Test_Player_Payload Test_Player_Payload_new(Slice_char name, int32_t health) {
+    Test_Player_Payload instance;
+    instance.name = name;
+    instance.health = health;
+    return instance;
+}</code>
+    </div>
+
+    <h4>Fourth Bug: Enum Constructor Compilation</h4>
+    <p>
+        Meanwhile, while testing, we found another bug where the codegen wasn't compiling:
+    </p>
+    <div class="code-block" data-lang="vix">
+        <code>return Player.Test(
+    name: "Player 1",
+    health: 100
+)</code>
+    </div>
+    <p>This bug has been fixed too.</p>
+
+    <h4>Fifth Bug: While Loop Generation</h4>
+    <p>
+        The fifth bug is about <code>while</code>. When you created any while loop, it would not generate because <code>codegen_enum</code> was failing—it always generated <code>label_0:</code> without any loop at all. This problem has been fixed.
+    </p>
+
+    <h4>Sixth Bug: Struct Implementation and Main Function</h4>
+    <p>The last bug: When you do something like:</p>
+    <div class="code-block" data-lang="vix">
+        <code>impl Test:
+    func new(): Test
+        Test(
+            i = 0,
+            x = ""
+        )
+    end
+    
+    func test(&mut self, input: int): Result[int, str]
+        if input != 0 then
+            self.i = 10
+            return Ok(0)
+        end
+        Err("Failed: input is zero")
+    end
+end
+
+func main()
+    create i: int = 10
+    create test = Test
+    create x = test.test(i)
+end</code>
+    </div>
+    <p>
+        This generated correct impl code, but everything inside <code>func main()</code> was generating incorrect IR:
+    </p>
+    <div class="code-block" data-lang="c">
+        <code>int32_t vix_main() {
+    int32_t t0 = 10;
+    const int32_t var_i = t0;
+    test_test(var_i);
+    int32_t t1 = 0;
+}</code>
+    </div>
+    <p>This bug has been fixed and now it generates correct IR.</p>
+
+    <p><strong>Release Date:</strong> [Date to be added]</p>
+</section>
+
+            <section class="section" id="security">
+                <h2>Security</h2>
+                <p>All libraries in the Vix marketplace undergo security checks. However, always be vigilant.</p>
+
+                <p><strong>Reporting Malware:</strong> If you discover malicious code, report it immediately at <a href="https://vix.dev/report">vix.dev/report</a>.</p>
+
+                <p>Creating or distributing malicious libraries will result in account termination and potential legal consequences.</p>
+            </section>
+
+            <section class="section" id="community">
+                <h2>Community & Support</h2>
+                <p>Join the growing Vix community to get help, share your projects, and contribute to the language.</p>
+
+                <h3>Official Links</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <a href="https://vix.dev" target="_blank" class="user_button" style="text-align:center;">Website</a>
+                    <a href="https://docs.vix.dev" target="_blank" class="user_button" style="text-align:center;">Docs</a>
+                    <a href="https://discord.gg/CAemjRc4ya" target="_blank" class="user_button" style="text-align:center;">Discord</a>
+                    <a href="https://github.com/VixLanguage/Vix-programing-language" target="_blank" class="user_button" style="text-align:center;">GitHub</a>
+                </div>
+
+                <h3 style="margin-top:30px;">Contributing</h3>
+                <p>We welcome contributions! You can help by:</p>
+                <ul>
+                    <li>Reporting bugs and issues</li>
+                    <li>Submitting feature requests</li>
+                    <li>Creating libraries and tools</li>
+                    <li>Improving documentation</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <div id="installModal" class="modal-overlay">
+        <div class="installer-window">
+            <div class="installer-header">
+                <h3>Install Vix</h3>
+            </div>
+            
+            <div id="installStep1">
+                <div class="form-group">
+                    <label class="form-label">Operating System</label>
+                    <select id="osSelect" class="form-select">
+                        <option value="" disabled selected>Select OS...</option>
+                        <option value="windows">Windows</option>
+                        <option value="linux">Linux</option>
+                        <option value="macos">macOS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Version</label>
+                    <select id="osVersion" class="form-select">
+                        <option value="latest">Latest / Stable</option>
+                        <option value="legacy">Legacy</option>
+                    </select>
+                </div>
+                
+                <button id="startInstallBtn" class="start-install-btn">Start Installation</button>
+                <button id="cancelInstallBtn" class="cancel-install-btn">Cancel</button>
+            </div>
+
+            <div id="installStep2" class="hidden">
+                <div class="progress-track">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <div id="statusText" class="installer-status">Redirecting...</div>
+                <div id="consoleOutput" class="console-output"></div>
+                <button id="closeModalBtn" class="close-modal-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="update.js"></script>
+</body>
+</html>
