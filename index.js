@@ -98,7 +98,7 @@
                 } else if (buttonText === 'download') {
                     navigateWithLoading('/website/src/download/download.html');
                 } else if (buttonText === 'libraries') {
-                    navigateWithLoading('/website/src/libraries/libraries.html');
+                    navigateWithLoading('src/libraries/libraries.html');
                 } else if (buttonText === 'update') {
                     navigateWithLoading('/website/src/update/update.html');
                 } else if (buttonText === 'support') {
@@ -395,4 +395,5 @@ end`,
                     }
                 });
             });
+
         });
