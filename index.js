@@ -96,13 +96,13 @@
                 if (buttonText === 'docs') {
                     navigateWithLoading('/home/src/docs/docs.html');
                 } else if (buttonText === 'download') {
-                    navigateWithLoading('/website/src/download/download.html');
+                    navigateWithLoading('/src/download/download.html');
                 } else if (buttonText === 'libraries') {
-                    navigateWithLoading('src/libraries/libraries.html');
+                    navigateWithLoading('/src/libraries/libraries.html');
                 } else if (buttonText === 'update') {
-                    navigateWithLoading('/website/src/update/update.html');
+                    navigateWithLoading('/src/update/update.html');
                 } else if (buttonText === 'support') {
-                    navigateWithLoading('/website/src/support/support.html');
+                    navigateWithLoading('/src/support/support.html');
                 }
             });
         });
@@ -397,3 +397,4 @@ end`,
             });
 
         });
+
