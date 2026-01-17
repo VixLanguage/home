@@ -1,0 +1,2411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vix Documentation</title>
+    <link rel="icon" href="images/logo.png" type="imagef/png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-purple: #68009d;
+            --accent-purple: #a855f7;
+            --text-gray: #b0b0b0;
+            --code-bg: #1a1a2e;
+            --nav-height-lg: 80px;
+            --nav-height-sm: 60px;
+            --bg-dark: #0a0a1a;
+            --success-green: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #000000 50%, #000000 100%);
+            background-attachment: fixed;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(104, 0, 157, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(74, 89, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(121, 23, 177, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* --- Sticky Header --- */
+        .top_frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height-lg);
+            border-bottom: 2px solid var(--primary-purple);
+            background: linear-gradient(90deg, rgba(20, 20, 30, 0.95) 0%, rgba(30, 15, 50, 0.9) 50%, rgba(20, 20, 30, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(104, 0, 157, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            box-sizing: border-box;
+            z-index: 1000;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .top_frame::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #68009d 20%, #a855f7 50%, #68009d 80%, transparent 100%);
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        /* Scrolled State */
+        body.scrolled .top_frame {
+            height: var(--nav-height-sm);
+            padding: 0 20px;
+            border-bottom-width: 1px;
+        }
+
+        body.scrolled .top_frame::after {
+            opacity: 0;
+        }
+
+        /* Logo Area */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: opacity 0.4s ease, transform 0.4s ease, width 0.4s ease;
+            opacity: 1;
+            width: auto;
+            transform: translateX(0);
+            cursor: pointer;
+        }
+
+        body.scrolled .logo-container {
+            opacity: 0;
+            transform: translateX(-20px);
+            width: 0;
+            margin: 0;
+            padding: 0;
+            pointer-events: none;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: none;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-family: 'Orbitron';
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+            filter: drop-shadow(0 0 10px rgba(104, 0, 157, 0.5));
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        /* Used for the image tag specifically */
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.8));
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation */
+        .nav-center {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            transition: all 0.4s ease;
+        }
+
+        /* Collapsible Sidebar Styles */
+        .sidebar-section {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-h2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--accent-purple);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-h2 .arrow {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            font-size: 18px;
+            color: var(--accent-purple);
+        }
+
+        .sidebar-section.expanded .sidebar-h2 .arrow {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-h2:hover {
+            background: rgba(168, 85, 247, 0.1);
+            color: white;
+            border-left-color: var(--accent-purple);
+        }
+
+        .sidebar-h2.active {
+            background: rgba(168, 85, 247, 0.2);
+            color: white;
+            border-left-color: var(--accent-purple);
+        }
+
+        .sidebar-sublist {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-left: 30px;
+        }
+
+        .sidebar-section:not(.expanded) .sidebar-sublist {
+            max-height: 0;
+        }
+
+        .sidebar-section.expanded .sidebar-sublist {
+            max-height: 500px;
+        }
+
+        .sidebar-h3 {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            margin-bottom: 5px;
+            border-left: 2px solid transparent;
+        }
+
+        .sidebar-h3:hover {
+            background: rgba(168, 85, 247, 0.1);
+            color: white;
+            border-left-color: var(--accent-purple);
+            transform: translateX(5px);
+        }
+
+        .sidebar-h3.active {
+            background: rgba(168, 85, 247, 0.15);
+            color: white;
+            border-left-color: var(--accent-purple);
+        }
+
+        .nav_button {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            position: relative;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .nav_button::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #68009d, #a855f7);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .nav_button:hover {
+            color: #fff;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+        }
+
+        .nav_button:hover::before {
+            width: 80%;
+        }
+
+        .nav_button.active {
+            color: #fff;
+        }
+
+        .nav_button.active::before {
+            width: 80%;
+        }
+
+        /* User Buttons */
+        .user-buttons {
+            display: flex;
+            gap: 15px;
+            transition: all 0.4s ease;
+        }
+
+        .user_button {
+            background: transparent;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: var(--accent-purple);
+            font-size: 14px;
+            cursor: pointer;
+            padding: 6px 18px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .user_button:hover {
+            color: #fff;
+            background: rgba(168, 85, 247, 0.2);
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            margin-top: var(--nav-height-lg);
+            min-height: calc(100vh - var(--nav-height-lg));
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(168, 85, 247, 0.2);
+            padding: 30px 20px;
+            position: sticky;
+            top: var(--nav-height-lg);
+            height: calc(100vh - var(--nav-height-lg));
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-purple) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: var(--primary-purple);
+            border-radius: 3px;
+        }
+
+        .sidebar h3 {
+            color: var(--accent-purple);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            margin-bottom: 15px;
+            margin-top: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sidebar h3:first-child { margin-top: 0; }
+
+        .sidebar-link {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            margin-bottom: 5px;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(168, 85, 247, 0.1);
+            color: white;
+            border-left-color: var(--accent-purple);
+            transform: translateX(5px);
+        }
+
+        .sidebar-link.active {
+            background: rgba(168, 85, 247, 0.2);
+            color: white;
+            border-left-color: var(--accent-purple);
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 60px 80px;
+            max-width: 1200px;
+        }
+
+        .doc-header {
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .doc-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            background: linear-gradient(135deg, #ffffff 0%, #d5a8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .doc-subtitle {
+            color: var(--text-gray);
+            font-size: 18px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 80px;
+            scroll-margin-top: 100px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-purple);
+            font-size: 32px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h2::before {
+            content: '▹';
+            color: var(--primary-purple);
+            font-size: 1.2em;
+        }
+
+        .section h3 {
+            color: #d5a8ff;
+            font-size: 22px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+        }
+
+        .section h4 {
+            color: #fff;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            color: #e0e0e0;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .section ul, .section ol {
+            color: #e0e0e0;
+            margin-left: 30px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .section a {
+            color: var(--accent-purple);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .section a:hover {
+            text-decoration: underline;
+            color: #fff;
+        }
+
+        .install-btn {
+            background: linear-gradient(135deg, #1307ff, #4a59ff);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .install-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .install-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .installer-window {
+            background: rgba(20, 20, 35, 0.95);
+            border: 1px solid var(--accent-purple);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(104, 0, 157, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        .modal-overlay.active .installer-window {
+            transform: scale(1);
+        }
+
+        .installer-header h3 {
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 10px;
+        }
+
+        .installer-status {
+            color: var(--text-gray);
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            margin-bottom: 20px;
+            min-height: 20px;
+        }
+
+        .progress-track {
+            background: rgba(255, 255, 255, 0.1);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-purple), var(--accent-purple));
+            border-radius: 5px;
+            transition: width 0.2s ease;
+            box-shadow: 0 0 10px var(--accent-purple);
+        }
+
+        .console-output {
+            background: #000;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: left;
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            color: #a8dadc;
+            height: 120px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .console-line {
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .console-line.success { color: var(--success-green); }
+        .console-line.warn { color: #f1fa8c; }
+        .console-line.info { color: #8be9fd; }
+
+        .close-modal-btn {
+            background: transparent;
+            border: 1px solid var(--accent-purple);
+            color: var(--accent-purple);
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            transition: all 0.2s;
+            display: none; /* Hidden until complete */
+            margin: 0 auto;
+        }
+
+        .close-modal-btn:hover {
+            background: var(--accent-purple);
+            color: white;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: rgba(168, 85, 247, 0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .code-block code {
+            color: #a8dadc;
+            white-space: pre; 
+            display: block;
+        }
+
+        .code-keyword    { color: #ff79c6; font-weight: bold; }
+        .code-function   { color: #50fa7b; }
+        .code-string     { color: #f1fa8c; }
+        .code-comment    { color: #6272a4; font-style: italic; }
+        .code-numeric    { color: #bd93f9; }
+        .code-type       { color: #8be9fd; }
+        .code-const      { color: #ffb86c; }
+        .code-attribute  { color: #ffb86c; }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .copy-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* Info/Warning Boxes */
+        .info-box {
+            background: rgba(74, 89, 255, 0.1);
+            border-left: 4px solid #4a59ff;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 6px;
+        }
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 6px;
+        }
+        .note-box {
+            background: rgba(7, 73, 255, 0.1);
+            border-left: 4px solid #1307ff;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 6px;
+        }
+        .success-box {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: rgba(30, 20, 50, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--accent-purple);
+            padding: 15px;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #e0e0e0;
+        }
+
+        tr:hover {
+            background: rgba(168, 85, 247, 0.05);
+        }
+        
+        /* Modal Styles (Refined) */
+        .modal-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); 
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            opacity: 0; 
+            visibility: hidden; 
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+
+        .installer-window {
+            background: rgba(20, 20, 35, 0.95); 
+            border: 1px solid var(--accent-purple);
+            border-radius: 12px; 
+            width: 90%; 
+            max-width: 500px; 
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(104, 0, 157, 0.5);
+            transform: scale(0.9); 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        .modal-overlay.active .installer-window { 
+            transform: scale(1); 
+        }
+
+        .installer-header h3 { 
+            color: white; 
+            font-family: 'Orbitron', sans-serif; 
+            margin-bottom: 20px; 
+        }
+
+        /* Form Inputs */
+        .form-group { 
+            text-align: left; 
+            margin-bottom: 20px; 
+        }
+        .form-label { 
+            display: block; 
+            color: var(--text-gray); 
+            margin-bottom: 8px; 
+            font-size: 14px; 
+        }
+        .form-select, .form-input {
+            width: 100%; 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: white; 
+            padding: 12px; 
+            border-radius: 6px; 
+            font-family: 'Fira Code', monospace;
+            font-size: 14px; 
+            outline: none; 
+            transition: border-color 0.3s;
+        }
+        .form-select:focus, .form-input:focus { 
+            border-color: var(--accent-purple); 
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); 
+        }
+        .form-input::placeholder { 
+            color: rgba(255,255,255,0.3); 
+        }
+
+        /* Start Install Button */
+        .start-install-btn {
+            width: 100%; 
+            background: var(--accent-purple); 
+            color: white; 
+            border: none;
+            padding: 12px; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer;
+            font-family: 'Orbitron'; 
+            transition: background 0.3s; 
+            text-transform: uppercase;
+        }
+        .start-install-btn:hover { 
+            background: var(--primary-purple); 
+        }
+
+        /* Progress Bar Area */
+        .installer-status { 
+            color: var(--text-gray); 
+            font-family: 'Fira Code', monospace; 
+            font-size: 14px; 
+            margin-bottom: 20px; 
+            min-height: 20px; 
+        }
+        .progress-track { 
+            background: rgba(255, 255, 255, 0.1); 
+            height: 10px; 
+            border-radius: 5px; 
+            overflow: hidden; 
+            margin-bottom: 25px; 
+            position: relative; 
+        }
+        .progress-bar { 
+            height: 100%; 
+            width: 0%; 
+            background: linear-gradient(90deg, var(--primary-purple), var(--accent-purple)); 
+            border-radius: 5px; 
+            transition: width 0.2s ease; 
+            box-shadow: 0 0 10px var(--accent-purple); 
+        }
+
+        /* Console Log Output */
+        .console-output {
+            background: #000; 
+            border-radius: 6px; 
+            padding: 15px; 
+            text-align: left;
+            font-family: 'Fira Code', monospace; 
+            font-size: 12px; 
+            color: #a8dadc;
+            height: 120px; 
+            overflow-y: auto; 
+            margin-bottom: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .console-line { 
+            display: block; 
+            margin-bottom: 4px; 
+        }
+        .console-line.success { color: #10b981; } /* Green */
+        .console-line.warn { color: #f1fa8c; } /* Yellow */
+        .console-line.info { color: #8be9fd; } /* Blue */
+
+        /* Finish Button */
+        .close-modal-btn {
+            background: transparent; 
+            border: 1px solid var(--accent-purple); 
+            color: var(--accent-purple);
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold; 
+            transition: all 0.2s; 
+            display: none; /* Hidden until done */
+            margin: 0 auto;
+        }
+        .close-modal-btn:hover { 
+            background: var(--accent-purple); 
+            color: white; 
+        }
+
+        .hidden { 
+            display: none !important; 
+        }
+
+        .cancel-install-btn {
+            width: 100%; 
+            background: transparent; 
+            border: 1px solid #555; 
+            color: #ccc; 
+            padding: 12px; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer;
+            font-family: 'Roboto'; 
+            transition: all 0.3s; 
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+        .cancel-install-btn:hover { 
+            border-color: #fff; 
+            color: #fff; 
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            }
+            .content-area {
+                padding: 30px 20px;
+            }
+            .nav-center {
+                display: none;
+            }
+            .top_frame {
+                justify-content: center;
+            }
+            .doc-title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="top_frame">
+        <div class="logo-container" onclick="window.location.href='https://vixlanguage.github.io'">
+            <div class="logo">
+                <img src="images/logo.png" alt="Vix Logo" class="logo-img" onerror="this.src='https://picsum.photos/seed/vixlogo/50/50.jpg'">
+            </div>
+            <div class="logo-text">VIX DOCS</div>
+        </div>
+
+        <div class="nav-center">
+            <button class="nav_button active">Docs</button>
+            <button class="nav_button" onclick="window.location.href='https://vix.dev'">Website</button>
+            <button class="nav_button" onclick="window.location.href='https://vix.dev/marketplace'">Marketplace</button>
+            <button class="nav_button" onclick="window.location.href='https://discord.gg/CAemjRc4ya'">Community</button>
+        </div>
+
+        <div class="user-buttons">
+            <button class="user_button">v3.5 Alpha</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3>Getting Started</h3>
+                <a href="#intro" class="sidebar-link active">Introduction</a>
+                <a href="#history" class="sidebar-link">History</a>
+                <a href="#installation" class="sidebar-link">Installation</a>
+                <a href="#quickstart" class="sidebar-link">Quick Start</a>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Language Basics</h3>
+                <a href="#syntax" class="sidebar-link">Syntax Overview</a>
+                <a href="#types" class="sidebar-link">Type System</a>
+                <a href="#memory" class="sidebar-link">Memory Safety</a>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Core Concepts</h3>
+                <a href="#structs" class="sidebar-link">Structs</a>
+                <a href="#functions" class="sidebar-link">Functions</a>
+                <a href="#enums" class="sidebar-link">Enums</a>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Advanced</h3>
+                <a href="#compiler" class="sidebar-link">Compiler</a>
+                <a href="#libraries" class="sidebar-link">Libraries</a>
+                <a href="#performance" class="sidebar-link">Performance</a>
+                <a href="#security" class="sidebar-link">Security</a>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Resources</h3>
+                <a href="#community" class="sidebar-link">Community & Support</a>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <div class="doc-header">
+                <h1 class="doc-title">Vix Documentation</h1>
+                <p class="doc-subtitle">Modern. Safe. Performant. The complete guide to the Vix programming language.</p>
+            </div>
+
+            <section class="section" id="intro">
+                <h2>Introduction</h2>
+                <p>
+                    Vix is a modern programming language designed to balance performance, memory safety, and developer productivity. It combines the speed of C with the safety features of modern languages, making it suitable for both low-level system programming and high-level application development.
+                </p>
+                
+                <div class="warning-box">
+                    <strong>Current Status:</strong> Alpha version. Expect breaking changes as we rapidly iterate towards stability.
+                </div>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>Performance:</strong> Compiles to C, then to LLVM using Clang. Achieves C-level performance with SSA optimizations.</li>
+                    <li><strong>Safety:</strong> Immutable variables by default, no <code>null</code> (uses <code>None</code>), built-in <code>Option</code> and <code>Result</code> types.</li>
+                    <li><strong>Developer Experience:</strong> Simple syntax using <code>end</code> keyword instead of braces. Beginner-friendly design.</li>
+                    <li><strong>Interoperability:</strong> Seamless integration with C/C++ libraries.</li>
+                </ul>
+            </section>
+
+            <section class="section" id="history">
+                <h2>Language History</h2>
+                <p>Vix was created by the Vix Development Team under the leadership of <strong>MrBatata</strong>. The project began in early 2024 and was officially released to the public on January 1, 2026.</p>
+
+                <h3>Key Team Members</h3>
+                <ul>
+                    <li><strong>MrBatata</strong> - Project Leader and Founder</li>
+                    <li><strong>Kat</strong> - Co-owner</li>
+                    <li><strong>Masashi</strong> - Manager and Compiler Expert</li>
+                </ul>
+
+                <p>The language went through six different compiler iterations during its two-year pre-alpha development phase before reaching its current alpha release.</p>
+            </section>
+
+            <section class="section" id="installation">
+                <h2>Installation</h2>
+                <p>
+                    Vix is so simple to use and install too!. You can install Vix safely by follow this steps:
+                </p>
+                
+                <p>
+                    1. Install Vix compiler by clicking on <code>Install</code> button.
+                </p>
+                <p>
+                    2. Select your OS and Type then hit <strong>Start Installion</strong>. 
+                </p>
+ 
+                <p><em>[Select Screenshot]</em></p>
+                <p>
+                    3. Go to your <strong>Downloads</strong> folder and find <strong>vix-installer.*</strong> then run it.
+                </p>
+                <p><em>[Installer Screenshot]</em></p>
+                <p>
+                    4. Select installing path ( Optional )
+                </p>
+
+                <p>
+                    5. Verfiy Installion. Run a new terminal and run:
+                </p>
+                <div class="code-block" data-lang="powershell">
+                    <code>
+vix --version
+                    </code>
+                </div>
+                <p>
+                    Hit install to start install Vix!.
+                </p>
+                    <div style="display: flex; gap: 15px; margin-top: 10px;">
+                        <button id="triggerInstallBtn" class="install-btn">
+                            <span>↓</span> Install Vix
+                        </button>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>Warning:</strong> Don't install any <strong>Unoffical Vix installer</strong> from any website. Only offical website is:
+                        <strong>https://vixlanguage.github.io</strong> any other website cliam it's <strong>it's offical Vix leave it.</strong>
+                    </div>
+                </p>
+
+                <h3>Quick Install (Linux/macOS)</h3>
+                <div class="code-block" data-lang="bash">
+                    <code>
+# Using curl
+curl -sSl https://vixlanguage.github.io/install.sh | bash
+
+# Or wget
+wget -qO- https://vixlanguage.github.io/install.sh | bash
+                    </code>
+                </div>
+
+                <h3>Quick Install (Windows/PowerShell)</h3>
+                <div class="code-block" data-lang="powershell">
+                    <code>
+# Download and run the installer
+irm https://vixlanguage.github.io/install.ps1 | iex
+
+# Verify installation
+vix --version
+                    </code>
+                </div>
+
+                <div class="success-box">
+                    <strong>>> Verify Installation</strong><br>
+                    Run <code>vix --version</code> to confirm the installation was successful.
+                </div>
+
+                <h3>Installing Clang (Required)</h3>
+                <p>Vix relies on Clang for compilation. Choose your OS below:</p>
+
+                <h4>Windows (MSYS2)</h4>
+                <div class="code-block" data-lang="bash">
+                    <code>
+# 64-bit
+pacman -S mingw-w64-x86_64-clang
+
+# 32-bit
+pacman -S mingw-w64-i686-clang
+                    </code>
+                </div>
+
+                <h4>Linux</h4>
+                <div class="code-block" data-lang="bash">
+                    <code>
+# Arch / Manjaro
+sudo pacman -S clang
+
+# Fedora
+sudo dnf install clang
+
+# Ubuntu / Debian
+sudo apt update
+sudo apt install clang
+                    </code>
+                </div>
+
+                <h4>macOS</h4>
+                <div class="code-block" data-lang="bash">
+                    <code>
+xcode-select --install
+                    </code>
+                </div>
+            </section>
+
+            <section class="section" id="quickstart">
+                <h2>Quick Start</h2>
+                <p>Create your first Vix program in just a few steps.</p>
+
+                <h3>Hello World</h3>
+                <div class="code-block" data-lang="vix">
+                    <code>
+func main(): int
+    print("Hello, world!")
+    return 0
+end
+                    </code>
+                </div>
+
+                <h3>Compile and Run</h3>
+                <div class="code-block" data-lang="bash">
+                    <code>
+# Compile normally
+vix run main.vx
+
+# Run using the interpreter (for fast iteration)
+vix run --inter main.vx
+                    </code>
+                </div>
+<section class="section" id="memory">
+    <h2>Memory Safety</h2>
+
+    <p>
+        Vix is <strong>memory-safe by default</strong>. It uses compile-time checks and an ownership system
+        to prevent common memory issues while keeping code readable and efficient. Key points:
+    </p>
+
+    <ul>
+        <li>Automatic memory management by default.</li>
+        <li>Ownership rules prevent dangling pointers and double frees.</li>
+        <li>Mutable and immutable variables control what can be changed.</li>
+        <li>Borrowing via <code>ref</code> / <code>ref mut</code> allows safe access without copying.</li>
+        <li>Move, Copy, and Clone semantics ensure predictable memory usage.</li>
+    </ul>
+
+    <h3>Safe vs Unsafe Blocks</h3>
+
+    <p>
+        Vix distinguishes between <strong>safe</strong> and <strong>unsafe</strong> code:
+    </p>
+
+    <ul>
+        <li><strong>Safe (default):</strong> 
+            <ul>
+                <li>Automatic memory management.</li>
+                <li>Ownership enforced at compile-time.</li>
+                <li>Overflow and boundary checks enabled.</li>
+                <li>Prevents common memory bugs automatically.</li>
+            </ul>
+        </li>
+        <li><strong>Unsafe:</strong> 
+            <ul>
+                <li>Allows raw pointers and manual memory management.</li>
+                <li>No overflow or boundary checks.</li>
+                <li>Used only for performance-critical code or system/OS programming.</li>
+                <li>Programmer must ensure safety manually.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="code-block" data-lang="vix">
+        <code>
+// Unsafe block example
+unsafe:
+    mut i = 0
+
+    forever do
+        i += 10
+    end
+
+    // Raw pointer operations allowed
+    mut x = ptr* uint8
+    free(x)
+end
+        </code>
+    </div>
+
+    <h3>Option and Result Types</h3>
+
+    <p>
+        Vix provides <strong>Option</strong> and <strong>Result</strong> types to handle potential
+        absence of values or operations that may fail safely. Key points:
+    </p>
+
+    <ul>
+        <li><strong>Option:</strong> Represents a value that may or may not exist. 
+            <ul>
+                <li>Use <code>Some(value)</code> for a value.</li>
+                <li>Use <code>None</code> when no value exists.</li>
+            </ul>
+        </li>
+        <li><strong>Result:</strong> Represents an operation that can succeed (<code>Ok</code>) 
+            or fail (<code>Err</code>).
+            <ul>
+                <li>Helps avoid runtime exceptions.</li>
+                <li>Encourages explicit handling of errors.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="code-block" data-lang="vix">
+        <code>
+// Option type
+i: Option[int32] = None
+x: Option[int32] = Some(30)
+
+// Result type
+func example(): Result[Option[int32], str]
+    return Ok((100, "Hello world"))
+end
+        </code>
+    </div>
+
+    <p>
+        Using these features together, Vix ensures memory safety while giving the programmer 
+        control over performance when needed.
+    </p>
+</section>
+
+                <h3>Variables:</h3>
+                <h3>Mutable & Immutable</h3>
+                <p>
+                    Variables in vix arealways <a href="#" class="blue-link">Immutable variables</a> by defualt. You can make a variable <a href="#" class="blue-link">Mutable variable</a> using <strong>mut</strong> keyword.
+                </p>
+
+                <div class="code-block" data-lang="vix">
+                    <code>
+// Immutable variables ( Defualt ):
+create i = 10
+i += 20 // error: Variable is immutable 
+print(i) // print 10
+                    </code>
+                </div>
+
+                <p>
+                    Immutable variables can't be modified after creation. Made only for read only. That allow you to make variables for reading 
+                    You can of course make your variables mutable using <code>mut</code> keyword:
+                </p>
+
+                <div class="code-block" data-lang="vix">
+                    <code>
+// Mutable variables, require "mut" keyword:
+create mut i = 10
+i += 20 // Now i is 30
+print(i) // will print "30"
+                    </code>
+                </div>
+
+                <p>
+                    Mutable variables can be modified after creation. Made for read/write.
+                </p>
+                
+
+                <div class="note-box">
+                    <strong>Variables Immutable by defualt Safety:</strong> Vix is immutable by defualt beacuse this privent you from so many bugs & problems could happen if everything is mutable by defualt. Use <code>mut</code> to make your variable mutable and can be read/modifed.
+                </div>
+
+                    <p>
+                        Immutable variables can be mutable in a different <strong>scope</strong> but they only be inside that scope mutable and any changes don't get into the orginal variable.
+                    </p>
+                    <div class="code-block" data-lang="vix">
+                        <code>
+// Function is a different scope:
+func example(mut i) // now "x" is a variable "x" only inside the function and mutable
+    i += 50
+                        
+    print(i) // will print 80
+end
+
+create x = 30
+
+example(x)
+
+print(x) // will print 30 beacuse everything just changed inside the function it self.
+                        </code>
+                    </div>
+                    <h3>Ownership:</h3>
+                    <h3>Borrow & Reference</h3>
+
+                <p>
+                    Vix is a <a href="#" class="blue-link">memory-safe</a> programming language.
+                    It provides multiple safety mechanisms to ensure programs are fast, secure,
+                    and free from common issues such as crashes, memory leaks, and security vulnerabilities.
+                </p>
+
+                <p>
+                    One of the core safety features in Vix is the <strong>borrow system</strong>,
+                    which allows controlled access to variables without transferring ownership.
+                </p>
+
+                <p>
+                    There are two types of borrows:
+                </p>
+
+                <table>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>Immutable Borrow</td>
+                        <td>Read-only access to a variable; modification is not allowed</td>
+                    </tr>
+                    <tr>
+                        <td>Mutable Borrow</td>
+                        <td>Allows both reading and modifying the borrowed variable</td>
+                    </tr>
+                </table>
+
+                <p>
+                    <strong>Immutable Borrow</strong>: Allows you to read a variable without copying it,
+                    while guaranteeing that the value cannot be modified through the borrow.
+                </p>
+
+                <div class="code-block" data-lang="vix">
+                    <code>
+// Immutable borrow example:
+create i = 10
+create x = &i  // borrow "i"
+
+print(i) // prints 10
+print(x) // prints 10 (x reads the same value as i)
+                    </code>
+                </div>
+
+                <p>
+                    <strong>Mutable Borrow</strong>: Allows both reading and modifying a variable through
+                    the borrowed reference.
+                </p>
+
+                <div class="code-block" data-lang="vix">
+                    <code>
+// Mutable borrow example:
+create mut i = 10
+create mut x = &i  // mutable borrow
+
+x += 10
+print(x) // prints 20
+print(i) // prints 20 (original value is modified)
+                    </code>
+                </div>
+
+                <div class="note-box">
+                    <strong>Borrow Safety:</strong><br>
+                    Immutable and mutable borrows prevent hidden or unexpected changes to data.
+                    This makes programs easier to debug and reason about, reduces memory usage,
+                    and allows the <strong>CVix</strong> compiler to apply stronger optimizations.
+                    Borrowing also helps prevent issues such as
+                    <a href="#" class="blue-link">race conditions</a> and ensures that
+                    <a href="#" class="blue-link">multiple threads can safely read shared data</a>.
+                </div>
+
+                <h3>Borrow vs Reference</h3>
+
+                <p>
+                    <strong>Reference</strong>: In Vix, the <strong>ref</strong> keyword is used to create
+                    a reference to an existing variable instead of copying its value.
+                    A reference acts as another name for the same data in memory.
+                </p>
+
+                <ul>
+                    <li>References provide direct access to the original value.</li>
+                    <li>No memory copy is performed.</li>
+                    <li>References can be immutable or mutable.</li>
+                </ul>
+
+                <p>
+                    Immutable references allow readonly access, while mutable references allow
+                    modifying the original variable. This design provides strong safety guarantees
+                    while maintaining <strong>C level performance</strong>.
+
+                    Example usage:
+                </p>
+                
+
+                <div class="code-block" data-lang="vix">
+                    <code>
+create mut i = 10
+create i = 10
+ref x = i   // immutable reference
+
+print(x)    // prints 10
+x += 5      // error: cannot modify through immutable reference
+                    </code>
+                </div>
+
+
+                <p>
+                    Mutable references (<strong>ref mut</strong>) allow you to read and modify the original variable directly
+                    without copying its value. This provides both safety and high performance, as changes through the reference
+                    affect the original variable in a controlled way.
+
+                    Example usage:
+                </p>
+
+
+                <div class="code-block" data-lang="vix">
+                    <code>
+create mut i = 10
+ref mut x = i   // mutable reference
+
+x += 5
+print(x)  // 15
+print(i)  // 15
+                    </code>
+                </div>
+                <p>
+                    • Immutable references allow multiple readers
+                </p>
+                <p>
+                    • Mutable references allow a single writer
+                </p>
+                <p>
+                    • No copying occurs when using ref
+                </p>
+                <p>
+                    • References are always valid and memory safe
+                </p>
+
+                <h3>Move & Copy</h3>
+                <p>
+<p>
+    <strong>Ownership</strong> in Vix defines which variable is responsible for a piece of data in memory.  
+    Every value has a single owner at a time, and when the owner goes out of scope, the value is automatically cleaned up.  
+    Ownership ensures memory safety, prevents dangling references, and avoids accidental data corruption.  
+    Combined with mutable and immutable references, Vix allows safe, efficient access to data without copying unnecessarily.
+</p>
+<h3>Move</h3>
+
+<p>
+    <strong>Move:</strong> Transfers ownership of a variable to another variable. After a move, the original variable becomes invalid. Move prevents double-free and use-after-free bugs, is automatically applied to complex types like strings, arrays, and structs, and allows efficient passing of large data without copying. Key points: 
+    <ul>
+        <li>Ownership is transferred to the new variable</li>
+        <li>Original variable cannot be used after move</li>
+        <li>Automatic for complex types</li>
+        <li>Ensures memory safety and efficiency</li>
+    </ul>
+</p>
+
+<p>
+                <div class="code-block" data-lang="vix">
+                    <code>
+// Move example (strings / complex types)
+create mut s = "hello"
+create t = s   // ownership moves to t
+
+print(t)            // prints "hello"
+print(s)            // error: s has been moved and is no longer valid
+
+                    </code>
+                </div>
+</p>
+<h3>copy</h3>
+
+
+<p>
+    <strong>Copy:</strong> Duplicates the value so both the original and new variable remain valid. Copy is automatic for simple types like integers, booleans, and small fixed size values. It is safe, predictable, and does not require explicit cloning for lightweight data. Key points:
+    <ul>
+        <li>Original variable remains usable</li>
+        <li>Automatic for simple, stack only types</li>
+        <li>No ownership conflicts occur</li>
+        <li>Ideal for small, cheap to copy data</li>
+    </ul>
+</p>
+
+                <div class="code-block" data-lang="vix">
+                    <code>
+// Copy example (numbers are Copy types by default)
+create a = 10
+create b = a  // copied, a is still valid
+
+print(a)      // prints 10
+print(b)      // prints 10
+
+// Changing b does not affect a
+b += 5
+print(a)      // still 10
+print(b)      // 15
+                    </code>
+                </div>
+<h3>Clone</h3>
+<p>
+    <strong>Clone:</strong> Creates an explicit copy of a variable, allowing both the original and the new variable to remain valid. Clone is used for non-copyable or complex types like strings, arrays, or structs when you need two independent owners of the same data. Unlike Move, cloning duplicates the data instead of transferring ownership. Key points:
+    <ul>
+        <li>Original and cloned variables are independent</li>
+        <li>Useful for heap-allocated or complex types</li>
+        <li>Prevents ownership conflicts while allowing multiple owners</li>
+        <li>Requires explicit use of <code>clone</code></li>
+    </ul>
+    Example usage:
+    <div class="code-block" data-lang="vix">
+        <code>
+create mut s = "world"
+create t = s.clone()  // t is a separate copy
+
+print(s)  // prints "world"
+print(t)  // prints "world"
+
+// Modifying t does not affect s
+t += "!"
+print(s)  // still "world"
+print(t)  // "world!"
+        </code>
+    </div>
+</p>
+
+<h3>Scope</h3>
+            <h3>Scope Blocks</h3>
+            <p>
+                In Vix, <strong>scope</strong> defines where a variable or reference is valid.  
+                Variables and references are only accessible within the scope they are created.  
+                When a scope ends, variables go out of scope and are automatically cleaned up.
+            </p>
+
+            <ul>
+                <li>Variables are valid from the point of declaration to the end of the block (function, loop, or code block).</li>
+                <li>Immutable and mutable variables follow the same scope rules.</li>
+                <li>References (<strong>ref</strong> / <strong>ref mut</strong>) cannot outlive the variable they point to.</li>
+                <li>Nested scopes can have variables with the same name as outer scopes, creating shadowing.</li>
+            </ul>
+
+<div class="code-block" data-lang="vix">
+    <code>
+// Example of scope:
+func example()
+    create mut x = 10
+
+    scope
+        create x = 20  // shadows outer x
+        print(x)       // 20
+    end
+    
+    print(x)           // 10 (outer x)
+end
+            </code>
+        </div>
+
+        <h3>Scopes with Variables and References:</h3>
+
+        <p>
+            In Vix, scopes define where variables and references are valid.  
+            You can create variables, mutable variables, and references within a scope.  
+            Variables inside a scope are destroyed when the scope ends.  
+            References must always point to a variable that is still in scope.
+        </p>
+
+        <ul>
+            <li><strong>Immutable variables:</strong> readonly inside the scope.</li>
+            <li><strong>Mutable variables:</strong> can be modified inside the scope.</li>
+            <li><strong>Immutable references:</strong> can read the variable but cannot modify it.</li>
+            <li><strong>Mutable references:</strong> can read and modify the variable.</li>
+            <li>Shadowing is allowed: inner scopes can declare variables with the same name as outer scopes.</li>
+        </ul>
+
+        <div class="code-block" data-lang="vix">
+            <code>
+// Scope with mutable variable:
+scope mut i:
+    i = 10
+    i += 5
+    print(i)  // 15
+end
+
+// Scope with immutable variable:
+scope i:
+    i = 20
+    // i += 5   //  error: i is immutable
+    print(i)  // 20
+end
+
+// Scope with immutable reference:
+create x = 30
+
+scope ref r:
+    r = ref x
+    print(r)  // 30
+    // r += 10 //  error: cannot modify through immutable reference
+end
+
+// Scope with mutable reference:
+create mut y = 40
+scope ref mut r:
+    r = ref mut y
+    r += 10
+    print(r)  // 50
+    print(y)  // 50 (original variable modified)
+end
+                </code>
+            </div>
+
+<h3>Type System:</h3>
+
+<p>
+    Vix has a <strong>strongly typed system</strong> with built-in primitive types for numbers, strings, and booleans.  
+    Each type has a default size, but some types can vary depending on architecture or context.
+</p>
+
+<p>Overview of Vix primitive types:</p>
+
+<ul>
+    <li><strong>int</strong> — Represents integers. Default is <strong>int64</strong> (or <strong>int32</strong> on 32-bit systems).</li>
+    <li><strong>float</strong> — Represents floating-point numbers. Default is <strong>float16</strong>.</li>
+    <li><strong>str</strong> — Represents strings. Internally stored as <strong>usize</strong> (pointer-sized type).</li>
+    <li><strong>usize</strong> — Unsigned pointer-sized integer. Default is <strong>int64</strong> or <strong>int32</strong> depending on architecture.</li>
+    <li><strong>isize</strong> — Signed pointer-sized integer. Default is <strong>int64</strong> or <strong>int32</strong> depending on architecture.</li>
+    <li><strong>bool</strong> — Represents true/false values. In Vix, this type is called <strong>maybe</strong>.</li>
+</ul>
+
+                <div class="code-block" data-lang="vix">
+                    <code>
+// Integers
+create a = 42          // int64 by default
+create b: int32 = 10   // explicitly 32-bit integer
+
+// Floats
+create f = 3.14        // float16 by default
+create g: float32 = 2.71
+
+// Strings
+create name = "Vix"    // stored as usize pointer internally
+
+// Pointer-sized integers
+create index: usize = 100
+create offset: isize = -50
+
+// Booleans
+create alive: maybe = true
+create ready: maybe = false
+                    </code>
+                </div>
+
+                <p>Summary Table of Vix Primitive Types:</p>
+
+                <table>
+                    <tr>
+                        <th>Type</th>
+                        <th>Default Size</th>
+                        <th>Signed/Unsigned</th>
+                        <th>Notes</th>
+                    </tr>
+                    <tr>
+                        <td>int</td>
+                        <td>int64 (default), int32 on 32-bit</td>
+                        <td>Signed</td>
+                        <td>Standard integer type</td>
+                    </tr>
+                    <tr>
+                        <td>float</td>
+                        <td>float16</td>
+                        <td>Signed</td>
+                        <td>Floating-point numbers</td>
+                    </tr>
+                    <tr>
+                        <td>str</td>
+                        <td>usize (pointer-sized)</td>
+                        <td>N/A</td>
+                        <td>String type stored as pointer internally</td>
+                    </tr>
+                    <tr>
+                        <td>usize</td>
+                        <td>int64/int32 depending on architecture</td>
+                        <td>Unsigned</td>
+                        <td>Pointer-sized unsigned integer</td>
+                    </tr>
+                    <tr>
+                        <td>isize</td>
+                        <td>int64/int32 depending on architecture</td>
+                        <td>Signed</td>
+                        <td>Pointer-sized signed integer</td>
+                    </tr>
+                    <tr>
+                        <td>bool / maybe</td>
+                        <td>1 bit / architecture-dependent</td>
+                        <td>N/A</td>
+                        <td>Represents true/false values</td>
+                    </tr>
+                </table>
+
+<h2>Type System & Data Structures</h2>
+
+<p>
+    Vix supports various built-in types and data structures including arrays, tuples, structs, enums, and hash maps.  
+    You can also define methods on structs using <code>impl</code> and create optional constructors like <code>new</code>.
+</p>
+
+<h3>Arrays</h3>
+<ul>
+    <li>Fixed-size or dynamic collections of elements of the same type.</li>
+    <li>Access elements by index: <code>array[0]</code>.</li>
+    <li>Mutable arrays can be modified after creation.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+mut nums: Array[int] = [1, 2, 3, 4, 5]
+mut names: Array[str] = ["Alice", "Bob", "Charlie"]
+
+print(nums[0])   // 1
+print(names[1])  // "Bob"
+
+// Modify a mutable array
+nums[2] = 10
+print(nums)      // [1, 2, 10, 4, 5]
+    </code>
+</div>
+
+<h3>Tuples</h3>
+<ul>
+    <li>Immutable ordered collections of heterogeneous elements.</li>
+    <li>Access elements with dot notation: <code>tuple.0</code>, <code>tuple.1</code>.</li>
+    <li>Useful for returning multiple values from functions.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+point: (int, int) = (10, 20)
+info: (str, int) = ("Alice", 30)
+
+print(point.0)  // 10
+print(info.1)   // 30
+    </code>
+</div>
+
+<h3>Structs</h3>
+<ul>
+    <li>Custom types with named fields.</li>
+    <li>Methods can be added via <code>impl</code> blocks.</li>
+    <li>Fields can be mutable or immutable depending on declaration.</li>
+    <li>Optional constructors like <code>new</code> can be defined for convenience.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+struct Test:
+    i: int
+    x: str
+end
+
+impl Test:
+    func new(): Test
+        Test(
+            i = 0,
+            x = ""
+        )
+    end
+
+    func test(&mut self, input: int): Result[int, str]
+        if input != 0 then
+            self.i = 10
+            return Ok(0)
+        end
+        Err("Failed: input is zero")
+    end
+end
+    </code>
+</div>
+
+<h3>Using Structs & Methods</h3>
+<div class="code-block" data-lang="vix">
+    <code>
+func main()
+    create i: int = 10
+    create test = Test
+    create x = test.test(i)
+end
+    </code>
+</div>
+
+<h3>Enums</h3>
+<ul>
+    <li>Enumerations that can hold associated data.</li>
+    <li>Useful for creating variant types with different data in each variant.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+enum Stait:
+    Name(str)
+    Health(int32)
+end
+    </code>
+</div>
+
+<h3>HashMaps</h3>
+<ul>
+    <li>Key-value stores for fast lookup. Keys are unique.</li>
+    <li>Can be declared with inline initialization or empty and populated later.</li>
+    <li>Supports <code>str</code>, <code>int</code>, or other types as keys and values.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+// Inline initialization
+create scores = {
+    ["Banana"] = 100
+}
+
+// Inline with type annotation
+create i: HashMap[int32, str] = {
+    [1] = "Hello world"
+    [2] = "Banana"
+}
+
+// Create empty HashMap and populate
+mut scores: HashMap[str, int] = HashMap()
+scores["Alice"] = 100
+scores["Bob"] = 85
+
+print(scores["Alice"])  // 100
+print(scores["Bob"])    // 85
+    </code>
+</div>
+
+<h3>Example Functions</h3>
+<ul>
+    <li><code>random()</code> – Returns a pseudo-random number.</li>
+    <li><code>generate(len)</code> – Generates a random string of length <code>len</code>.</li>
+    <li>These functions can be used with arrays, strings, and other data structures.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+func random(): uint64
+    mut seed: int32 = 123456789
+    seed = seed * 6364136223846793005 + 1
+    return seed
+end
+
+func generate(len: int): str
+    mut alphabets: str = "abcdefghijklmnopqrstuvwxyz"
+    mut resulted = ""
+    mut i: int = 0
+
+    while i < len do
+        mut index: int = random() % 26
+        resulted = resulted + alphabets[index]
+        i = i + 1
+    end
+
+    return resulted
+end
+    </code>
+</div>
+
+<p>
+<b>Notes:</b>  
+- The <code>new</code> function in <code>impl</code> is optional; structs can be instantiated directly.  
+- Methods on structs can use <code>&self</code> (immutable) or <code>&mut self</code> (mutable).  
+- Enums and HashMaps provide flexible ways to structure and access data safely.  
+- HashMaps can be created empty, with inline initializers, or populated after creation using square brackets.  
+- Arrays and tuples are immutable by default unless declared <code>mut</code>.
+</p>
+    
+                </p>
+<h2>Operations & Control Flow</h2>
+
+<p>
+    Vix provides standard control flow operations similar to other languages, but with clean syntax using <code>end</code> instead of braces.  
+    Blocks are closed with <code>end</code>, and indentation is optional but recommended for readability.
+</p>
+
+<h3>If / Else / Elif</h3>
+<ul>
+    <li>Conditional execution based on boolean expressions.</li>
+    <li><code>if</code> checks a condition, <code>elif</code> provides additional checks, <code>else</code> handles all remaining cases.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+create x: int = 10
+
+if x > 20 then
+    print("x is greater than 20")
+elif x == 10 then
+    print("x is exactly 10")
+else
+    print("x is something else")
+end
+    </code>
+</div>
+
+<h3>While Loops</h3>
+<ul>
+    <li>Repeated execution while a condition is true.</li>
+    <li>Use <code>break</code> to exit early and <code>continue</code> to skip to the next iteration.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+mut i: int = 0
+
+while i < 5 do
+    print(i)
+    i += 1
+end
+
+// Example with break / continue
+mut j: int = 0
+while j < 10 do
+    j += 1
+    if j == 5 then
+        continue  // skip printing 5
+    end
+    if j == 8 then
+        break     // exit loop early
+    end
+    print(j)
+end
+    </code>
+</div>
+
+<h3>For Loops</h3>
+<ul>
+    <li>Iterates over a range or collection.</li>
+    <li>Supports arrays, hash maps, or numeric ranges.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+// Numeric range
+for i in 0..5 do
+    print(i)
+end
+
+// Iterating over an array
+mut names: Array[str] = ["Alice", "Bob", "Charlie"]
+for name in names do
+    print(name)
+end
+
+// Iterating over a HashMap
+mut scores: HashMap[str, int] = {
+    ["Alice"] = 100
+    ["Bob"] = 85
+}
+
+for key, value in scores do
+    print(key + ": " + value)
+end
+    </code>
+</div>
+
+<h3>Forever Loop</h3>
+<ul>
+    <li>Infinite loop until manually exited with <code>break</code>.</li>
+</ul>
+<div class="code-block" data-lang="vix">
+    <code>
+mut counter: int = 0
+
+forever do
+    counter += 1
+    print(counter)
+    if counter == 5 then
+        break
+    end
+end
+    </code>
+</div>
+
+<h3>Summary / Notes</h3>
+<ul>
+    <li>All control flow blocks are closed with <code>end</code> instead of braces.</li>
+    <li>Conditions can use comparison operators: <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>.</li>
+    <li>Logical operators: <code>and</code>, <code>or</code>, <code>not</code>.</li>
+    <li>Use <code>break</code> and <code>continue</code> inside loops for more control.</li>
+    <li>Vix supports iteration over ranges, arrays, and hash maps seamlessly.</li>
+</ul>
+
+            </section>
+
+            <section class="section" id="types">
+                <h2>Type System</h2>
+                <p>Vix provides simple, memorable type keywords with support for generics and algebraic data types.</p>
+
+                <h3>Basic Types</h3>
+                <table>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td>int / uint</td>
+                        <td>Signed/Unsigned integers (int8...int128)</td>
+                        <td>42, -17</td>
+                    </tr>
+                    <tr>
+                        <td>float</td>
+                        <td>Floating-point (float32, float64, float128)</td>
+                        <td>3.14, -0.5</td>
+                    </tr>
+                    <tr>
+                        <td>bool</td>
+                        <td>Boolean</td>
+                        <td>true, false</td>
+                    </tr>
+                    <tr>
+                        <td>str / char</td>
+                        <td>UTF-8 string and character</td>
+                        <td>"Hello", 'a'</td>
+                    </tr>
+                    <tr>
+                        <td>any</td>
+                        <td>Dynamic type</td>
+                        <td>Any value</td>
+                    </tr>
+                </table>
+
+                <h3>Advanced Types</h3>
+                <ul>
+                    <li><code>Option[T]</code> - Represents a value that may or may not exist.</li>
+                    <li><code>Result[T, E]</code> - Represents success or failure.</li>
+                    <li><code>ptr*</code> - Raw pointer type (for unsafe blocks).</li>
+                </ul>
+
+                <div class="note-box">
+                    <strong>Null Safety:</strong> Vix does not have <code>null</code>. Instead, use <code>None</code> inside an <code>Option</code> type to handle missing values safely.
+                </div>
+            </section>
+
+
+            <section class="section" id="structs">
+                <h2>Structs</h2>
+                <p>A struct is a way to group related data together under one name.</p>
+
+                <h3>Basic Syntax</h3>
+                <div class="code-block" data-lang="vix">
+                    <code>
+struct Book:
+    mut title: str
+    mut author: str
+    mut pages: int
+end
+
+# Create an instance
+mut my_book = Book(
+    title = "The Hobbit",
+    author = "J.R.R. Tolkien",
+    pages = 310
+)
+
+# Access fields
+print(my_book.title)
+my_book.pages = 360 # Modifiable because 'mut' is used
+                    </code>
+                </div>
+
+                <h3>Impl Blocks (Methods)</h3>
+                <p>You can add functions to structs using <code>impl</code>.</p>
+                <div class="code-block" data-lang="vix">
+                    <code>
+struct Player:
+    mut name: str
+    mut health: int
+    mut score: int
+end
+
+impl Player:
+    # Constructor
+    Player(name: str, health: int, score: int)
+        self.name = name
+        self.health = health
+        self.score = score
+    end
+
+    func take_damage(&mut self, damage: int)
+        self.health -= damage
+    end
+
+    func is_alive(&self): bool
+        return self.health > 0
+    end
+end
+                    </code>
+                </div>
+                
+                <div class="info-box">
+                    <strong>Structs vs Enums:</strong> Use <strong>Structs</strong> when all fields should exist at the same time (AND logic). Use <strong>Enums</strong> when a value can be only one of several options (OR logic).
+                </div>
+            </section>
+
+            <section class="section" id="functions">
+                <h2>Functions</h2>
+                <p>Functions are reusable blocks of code identified by a name.</p>
+
+                <h3>Basic Syntax</h3>
+                <div class="code-block" data-lang="vix">
+                    <code>
+func add(a: int32, b: int32): int32
+    return a + b
+end
+                    </code>
+                </div>
+
+                <h3>Parameter Ownership</h3>
+                <p>Vix allows fine-grained control over how data is passed to functions.</p>
+                <ul>
+                    <li><strong>Owned (Default):</strong> Function takes ownership. Original variable invalidated.</li>
+                    <li><strong>mut:</strong> Function takes mutable ownership.</li>
+                    <li><strong>ref:</strong> Immutable reference (borrowing).</li>
+                    <li><strong>mut ref:</strong> Mutable reference. Changes persist.</li>
+                </ul>
+
+                <div class="code-block" data-lang="vix">
+                    <code>
+# Mutable Reference Example
+func increment(input: mut ref int32)
+    input += 1
+end
+
+mut value = 10
+increment(value) 
+# value is now 11
+print(value)
+                    </code>
+                </div>
+
+                <h3>Public vs Private</h3>
+                <p>Functions are private by default. Use <code>public</code> to expose them to other files.</p>
+                <div class="code-block" data-lang="vix">
+                    <code>
+# main.vix
+public func helper(): int32
+    return 100
+end
+
+# other.vix
+import helper from "src/main.vix"
+print(helper()) # Works
+                    </code>
+                </div>
+            </section>
+
+            <section class="section" id="enums">
+                <h2>Enums</h2>
+                <p>An enum represents a value that can be <strong>one of several options</strong>, but only one at a time.</p>
+
+                <h3>Simple Enums</h3>
+                <div class="code-block" data-lang="vix">
+                    <code>
+enum Color:
+    Red,
+    Green,
+    Blue,
+end
+
+favorite = Color.Red
+                    </code>
+                </div>
+
+                <h3>Enums with Data</h3>
+                <p>Variants can hold specific data relevant to that variant.</p>
+                <div class="code-block" data-lang="vix">
+                    <code>
+enum HttpResponse:
+    Success(data: str, status_code: int),
+    NotFound(url: str),
+    ServerError(error_message: str),
+end
+
+response = HttpResponse.Success(data: "Hello", status_code: 200)
+                    </code>
+                </div>
+
+                <h3>Pattern Matching</h3>
+                <p>Use <code>match</code> to handle enum variants safely.</p>
+                <div class="code-block" data-lang="vix">
+                    <code>
+match response do
+    case HttpResponse.Success(data, code) do
+        print("Success: ", data)
+    end
+    case HttpResponse.NotFound(url) do
+        print("Could not find: ", url)
+    end
+    case HttpResponse.ServerError(msg) do
+        print("Server Error: ", msg)
+    end
+end
+                    </code>
+                </div>
+            </section>
+
+            <section class="section" id="compiler">
+                <h2>Compiler</h2>
+                <p>The Vix compiler architecture is designed for optimization and safety.</p>
+
+                <h3>Compilation Pipeline</h3>
+                <div class="code-block" data-lang="text">
+                    <code>
+Source Code (.vx)
+    ↓
+Vix Lexer/Parser
+    ↓
+Type Checking & AST
+    ↓
+Vix Code Generator
+    ↓
+C Intermediate Representation
+    ↓
+Clang (LLVM) -O3
+    ↓
+Binary
+                    </code>
+                </div>
+
+                <p>The compiler is written in Rust and utilizes Static Single Assignment (SSA) for optimization. It generates highly optimized C code which is then compiled by Clang.</p>
+            </section>
+
+            <section class="section" id="libraries">
+                <h2>Libraries</h2>
+                <p>Vix has a built-in package manager for installing and creating libraries.</p>
+
+                <h3>Installing Libraries</h3>
+                <div class="code-block" data-lang="bash">
+                    <code>
+# Install a library
+package install "library_name"
+
+# Install specific version
+package install "library_name" --version 1.0.2
+
+# Check installed
+package check --library
+                    </code>
+                </div>
+
+                <h3>Using Libraries</h3>
+                <div class="code-block" data-lang="vix">
+                    <code>
+# Import entire library
+import library_name
+
+# Import specific items
+import something from library
+
+# Import C/C++ headers
+import "my_header.h"
+                    </code>
+                </div>
+                
+                <h3>Creating a Library</h3>
+                <div class="code-block" data-lang="bash">
+                    <code>
+# Generate new library structure
+package new "my_library"
+
+# Compile library
+package compile
+
+# Upload to marketplace
+package upload
+                    </code>
+                </div>
+            </section>
+
+            <section class="section" id="performance">
+                <h2>Performance</h2>
+                <p>Vix achieves C-level performance through Clang optimizations.</p>
+
+                <h3>Optimization Levels</h3>
+                <ul>
+                    <li>Default: <code>-O3</code> (Maximum optimization)</li>
+                    <li>Inline function expansion</li>
+                    <li>Loop unrolling</li>
+                    <li>Dead code elimination</li>
+                </ul>
+
+                <h3>Unsafe for Speed</h3>
+                <div class="warning-box">
+                    <strong>Warning:</strong> For maximum performance, use <code>unsafe</code> blocks. This removes bounds checking and borrow checking overhead.
+                </div>
+            </section>
+
+            <section class="section" id="security">
+                <h2>Security</h2>
+                <p>All libraries in the Vix marketplace undergo security checks. However, always be vigilant.</p>
+
+                <p><strong>Reporting Malware:</strong> If you discover malicious code, report it immediately at <a href="https://vix.dev/report">vix.dev/report</a>.</p>
+
+                <p>Creating or distributing malicious libraries will result in account termination and potential legal consequences.</p>
+            </section>
+
+            <section class="section" id="community">
+                <h2>Community & Support</h2>
+                <p>Join the growing Vix community to get help, share your projects, and contribute to the language.</p>
+
+                <h3>Official Links</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <a href="https://vix.dev" target="_blank" class="user_button" style="text-align:center;">Website</a>
+                    <a href="https://docs.vix.dev" target="_blank" class="user_button" style="text-align:center;">Docs</a>
+                    <a href="https://discord.gg/CAemjRc4ya" target="_blank" class="user_button" style="text-align:center;">Discord</a>
+                    <a href="https://github.com/VixLanguage/Vix-programing-language" target="_blank" class="user_button" style="text-align:center;">GitHub</a>
+                </div>
+
+                <h3 style="margin-top:30px;">Contributing</h3>
+                <p>We welcome contributions! You can help by:</p>
+                <ul>
+                    <li>Reporting bugs and issues</li>
+                    <li>Submitting feature requests</li>
+                    <li>Creating libraries and tools</li>
+                    <li>Improving documentation</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <div id="installModal" class="modal-overlay">
+        <div class="installer-window">
+            <div class="installer-header">
+                <h3>Install Vix</h3>
+            </div>
+            
+            <div id="installStep1">
+                <div class="form-group">
+                    <label class="form-label">Operating System</label>
+                    <select id="osSelect" class="form-select">
+                        <option value="" disabled selected>Select OS...</option>
+                        <option value="windows">Windows</option>
+                        <option value="linux">Linux</option>
+                        <option value="macos">macOS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Version</label>
+                    <select id="osVersion" class="form-select">
+                        <option value="latest">Latest / Stable</option>
+                        <option value="legacy">Legacy</option>
+                    </select>
+                </div>
+                
+                <button id="startInstallBtn" class="start-install-btn">Start Installation</button>
+                <button id="cancelInstallBtn" class="cancel-install-btn">Cancel</button>
+            </div>
+
+            <div id="installStep2" class="hidden">
+                <div class="progress-track">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <div id="statusText" class="installer-status">Redirecting...</div>
+                <div id="consoleOutput" class="console-output"></div>
+                <button id="closeModalBtn" class="close-modal-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="docs.js"></script>
+</body>
+</html>

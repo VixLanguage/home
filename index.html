@@ -1,0 +1,555 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vix programing langauge</title>
+        
+        <link rel="icon" href="images/logo.png" type="images/png">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vix programming language</title>
+        <meta name="description" content="Vix programing language a simple language with fast and high performance. It's easier then rust and faster then python!, it's low level system language and fully memory safe allow high level stuff too. It's still on alpha at current time but much more coming soon">
+        <meta name="robots" content="index, follow">
+
+        <meta property="og:title" content="Vix Programming Language">
+        <meta property="og:description" content="Vix programing language a simple language with fast and high performance. It's easier then rust and faster then python!, it's low level system language and fully memory safe allow high level stuff too. It's still on alpha at current time but much more coming soon">
+        <meta property="og:url" content="https://vixlanguage.github.io/">
+        <meta property="og:type" content="website">
+
+        <style>
+            :root {
+                --primary: #7c3aed;
+                --primary-light: #a78bfa;
+                --primary-dark: #4a0aaf;
+                --accent: #4871ec;
+                --bg: #0f0f23;
+                --bg-light: #1a1a2e;
+                --text: #e2e8f0;
+                --text-muted: #94a3b8;
+                --success: #10b981;
+                --card-bg: #16213e;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: linear-gradient(135deg, #0a0a0f 0%, #000000 50%, #000000 100%);
+                color: #e5d5ff;
+                font-family: 'Inter', sans-serif;
+                line-height: 1.6;
+                overflow-x: hidden;
+            }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: 
+                    radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 50%, rgba(167, 139, 250, 0.05) 0%, transparent 70%);
+                pointer-events: none;
+                z-index: 0;
+                animation: bgShift 15s ease infinite;
+            }
+
+            @keyframes bgShift {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.8; }
+            }
+
+            nav {
+                position: fixed;
+                top: 0;
+                width: 100%;
+                padding: 6px 5%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 1000;
+                backdrop-filter: blur(20px);
+                background: rgba(15, 15, 35, 0.7);
+                border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            }
+
+            .logo-section {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+                filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.6));
+            }
+
+            .logo-text {
+                font-size: 24px;
+                font-weight: 800;
+                background: linear-gradient(135deg, #a78bfa, #ec4899);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 30px;
+                align-items: center;
+            }
+
+            .nav-links a {
+                color: var(--text-muted);
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 15px;
+                transition: all 0.3s;
+                position: relative;
+            }
+
+            .nav-links a:hover {
+                color: var(--primary-light);
+            }
+
+            .nav-cta {
+                background: linear-gradient(135deg, var(--primary), var(--accent));
+                color: white;
+                padding: 10px 24px;
+                border-radius: 25px;
+                font-weight: 600;
+                transition: all 0.3s;
+                border: none;
+                cursor: pointer;
+            }
+
+            .nav-cta:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+            }
+
+            .hero {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 120px 5% 60px;
+                gap: 60px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .hero-content {
+                flex: 1;
+                max-width: 600px;
+            }
+
+            .hero-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(124, 58, 237, 0.15);
+                border: 1px solid rgba(124, 58, 237, 0.3);
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 14px;
+                color: var(--primary-light);
+                margin-bottom: 20px;
+                font-weight: 600;
+            }
+
+            .hero-badge::before {
+                content: '✨';
+                font-size: 16px;
+            }
+
+            h1 {
+                font-size: 56px;
+                font-weight: 800;
+                line-height: 1.1;
+                margin-bottom: 20px;
+                background: linear-gradient(135deg, #ffffff 0%, #a78bfa 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .hero-subtitle {
+                font-size: 20px;
+                color: var(--text-muted);
+                margin-bottom: 35px;
+                line-height: 1.7;
+            }
+
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                margin-bottom: 40px;
+            }
+
+            .feature-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 16px;
+                background: rgba(124, 58, 237, 0.08);
+                border: 1px solid rgba(124, 58, 237, 0.15);
+                border-radius: 12px;
+                transition: all 0.3s;
+            }
+
+            .feature-item:hover {
+                background: rgba(124, 58, 237, 0.12);
+                border-color: rgba(124, 58, 237, 0.3);
+                transform: translateX(5px);
+            }
+
+            .feature-icon {
+                font-size: 20px;
+            }
+
+            .feature-text {
+                font-size: 15px;
+                color: var(--text);
+                font-weight: 500;
+            }
+
+            .cta-buttons {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #0239b1, #004497);
+                color: white;
+                padding: 14px 32px;
+                border-radius: 30px;
+                font-weight: 700;
+                font-size: 16px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+
+            .btn-primary:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5);
+            }
+
+            .btn-secondary {
+                background: rgba(255, 255, 255, 0.05);
+                color: white;
+                padding: 14px 32px;
+                border-radius: 30px;
+                font-weight: 600;
+                font-size: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                cursor: pointer;
+                transition: all 0.3s;
+                backdrop-filter: blur(10px);
+            }
+
+            .btn-secondary:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.2);
+                transform: translateY(-3px);
+            }
+
+            .editor-wrapper {
+                flex: 1;
+                max-width: 750px;
+            }
+
+            .editor-container {
+                background: var(--bg-light);
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 
+                    0 20px 60px rgba(0, 0, 0, 0.5),
+                    0 0 0 1px rgba(124, 58, 237, 0.2);
+                transition: all 0.3s;
+            }
+
+            .editor-container:hover {
+                box-shadow: 
+                    0 25px 70px rgba(0, 0, 0, 0.6),
+                    0 0 0 1px rgba(124, 58, 237, 0.4),
+                    0 0 40px rgba(124, 58, 237, 0.15);
+                transform: translateY(-5px);
+            }
+
+            .editor-header {
+                background: rgba(30, 30, 46, 0.8);
+                padding: 12px 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+            }
+
+            .editor-dots {
+                display: flex;
+                gap: 8px;
+            }
+
+            .dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+            }
+
+            .dot-red { background: #ff5f57; }
+            .dot-yellow { background: #ffbd2e; }
+            .dot-green { background: #28ca42; }
+
+            .editor-tab {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 14px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-family: 'JetBrains Mono', monospace;
+                color: var(--primary-light);
+            }
+
+            .editor-tab::before {
+                content: '◉';
+                color: var(--accent);
+            }
+
+            .editor-actions {
+                display: flex;
+                gap: 8px;
+            }
+
+            .editor-btn {
+                padding: 6px 16px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+                border: none;
+            }
+
+            .btn-clear {
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text-muted);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .btn-clear:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: var(--text);
+            }
+
+            .btn-run {
+                background: linear-gradient(135deg, var(--success), #059669);
+                color: white;
+                box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            }
+
+            .btn-run:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
+            }
+
+            #editor-area {
+                height: 450px;
+            }
+
+            /* Info Section */
+            .info-section {
+                padding: 80px 5%;
+                background: rgba(22, 33, 62, 0.3);
+                border-top: 1px solid rgba(124, 58, 237, 0.15);
+            }
+
+            .info-grid {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+            }
+
+            .info-card {
+                background: rgba(26, 26, 46, 0.6);
+                padding: 30px;
+                border-radius: 16px;
+                border: 1px solid rgba(124, 58, 237, 0.15);
+                transition: all 0.3s;
+            }
+
+            .info-card:hover {
+                background: rgba(26, 26, 46, 0.8);
+                border-color: rgba(124, 58, 237, 0.3);
+                transform: translateY(-5px);
+            }
+
+            .info-card-icon {
+                font-size: 36px;
+                margin-bottom: 15px;
+            }
+
+            .nav_button {
+                background: none;
+                border: none;
+                color: var(--text-muted);
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 15px;
+                transition: all 0.3s;
+                position: relative;
+                cursor: pointer;
+                font-family: 'Inter', sans-serif;
+            }
+
+            .nav_button:hover {
+                color: var(--primary-light);
+            }
+            .info-card h3 {
+                font-size: 22px;
+                margin-bottom: 12px;
+                color: var(--primary-light);
+            }
+
+            .info-card p {
+                color: var(--text-muted);
+                line-height: 1.7;
+            }
+
+            /* Responsive */
+            @media (max-width: 1024px) {
+                .hero {
+                    flex-direction: column;
+                    padding-top: 100px;
+                    text-align: center;
+                }
+
+                .hero-content {
+                    max-width: 100%;
+                }
+
+                h1 {
+                    font-size: 42px;
+                }
+
+                .features-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .cta-buttons {
+                    justify-content: center;
+                }
+
+                .nav-links {
+                    display: none;
+                }
+            }
+
+            
+            @media (max-width: 640px) {
+                h1 {
+                    font-size: 36px;
+                }
+
+                .hero-subtitle {
+                    font-size: 18px;
+                }
+
+                #editor-area {
+                    height: 350px;
+                }
+
+                .btn-primary, .btn-secondary {
+                    padding: 12px 24px;
+                    font-size: 15px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+
+        <nav>
+            <div class="logo-section">
+                <img src="images/logo.png" alt="Vix" class="logo">
+            </div>
+            <div class="nav-links">
+                <button class="nav_button">Docs</button>
+                <button class="nav_button">Download</button>
+                <button class="nav_button">Libraries</button>
+                <button class="nav_button">Support</button>
+                <button class="nav-cta">Get Started →</button>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Build fast, safe systems with joy</h1>
+                <p class="hero-subtitle">
+                    Vix is a friendly programming language that makes system programming fun. 
+                    Write code that's easy to read, blazingly fast, and safe by default.
+                </p>
+
+                <div class="cta-buttons">
+                    <button class="btn-primary install_button">Install Vix</button>
+                    <button class="btn-secondary library_button">Library</button>
+                </div>
+            </div>
+
+            <div class="editor-wrapper">
+                <div class="editor-container">
+                    <div class="editor-header">
+                        <div class="editor-dots">
+                            <div class="dot dot-red"></div>
+                            <div class="dot dot-yellow"></div>
+                            <div class="dot dot-green"></div>
+                        </div>
+                        <div class="editor-tab">example.vix</div>
+                        <div class="editor-actions">
+                            <button class="editor-btn btn-clear">Clear</button>
+                            <button class="editor-btn btn-run">▶ Run</button>
+                        </div>
+                    </div>
+                    <div id="editor-area"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-card-icon">📚</div>
+                    <h3>Learn by doing</h3>
+                    <p>Interactive tutorials and examples help you master Vix in minutes, not hours.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon">🤝</div>
+                    <h3>Join the community</h3>
+                    <p>Friendly developers ready to help. Ask questions, share projects, grow together.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon">🔧</div>
+                    <h3>Built for real work</h3>
+                    <p>From CLI tools to web servers, Vix scales from hobby projects to production systems.</p>
+                </div>
+            </div>
+        </section>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>
