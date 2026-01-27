@@ -94,7 +94,7 @@
                 const buttonText = button.textContent.toLowerCase();
 
                 if (buttonText === 'docs') {
-                    navigateWithLoading('/home/src/docs/docs.html');
+                    navigateWithLoading('/docs');
                 } else if (buttonText === 'download') {
                     navigateWithLoading('/download');
                 } else if (buttonText === 'libraries') {
@@ -397,3 +397,4 @@ end`,
             });
 
         });
+
