@@ -1,0 +1,159 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Vix",
+  "scopeName": "source.vix",
+  "patterns": [
+
+    {
+      "comment": "Line comments — gray",
+      "name": "comment.line.double-slash",
+      "match": "//.*$"
+    },
+
+    {
+      "comment": "Strings with interpolation — orange/brown",
+      "name": "string.quoted.double",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "begin": "\\{",
+          "end": "\\}",
+          "patterns": [{ "include": "$self" }]
+        },
+        { "name": "constant.character.escape", "match": "\\\\." }
+      ]
+    },
+
+    {
+      "comment": "Char literals — orange/brown",
+      "name": "string.quoted.single.char",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        { "name": "constant.character.escape", "match": "\\\\." }
+      ]
+    },
+
+    {
+      "comment": "Numbers — orange",
+      "name": "constant.numeric",
+      "match": "\\b\\d+(\\.\\d+)?\\b"
+    },
+
+    {
+      "comment": "true/false/null — same blue as var/let",
+      "name": "storage.type",
+      "match": "\\b(true|false|null)\\b"
+    },
+
+    {
+      "comment": "Some/None/Ok/Err — original enum member color",
+      "name": "variable.other.enummember",
+      "match": "\\b(Some|None|Ok|Err)\\b"
+    },
+
+    {
+      "comment": "borrow before self — borrow is blue (storage.type), self is blue",
+      "match": "\\b(borrow)\\s+(self)\\b",
+      "captures": {
+        "1": { "name": "storage.type" },
+        "2": { "name": "storage.type" }
+      }
+    },
+
+    {
+      "comment": "var before borrow — var is purple (keyword.control)",
+      "match": "\\b(var)\\s+(borrow)\\b",
+      "captures": {
+        "1": { "name": "keyword.control" },
+        "2": { "name": "keyword.control" }
+      }
+    },
+
+    {
+      "comment": "var before if — var is purple (keyword.control)",
+      "match": "\\b(var)\\s+(if)\\b",
+      "captures": {
+        "1": { "name": "keyword.control" },
+        "2": { "name": "keyword.control" }
+      }
+    },
+
+    {
+      "comment": "borrow for — borrow is blue, for is white/no color",
+      "match": "\\b(borrow|reference)\\s+(for)\\b",
+      "captures": {
+        "1": { "name": "storage.type" },
+        "2": { "name": "punctuation.separator" }
+      }
+    },
+
+    {
+      "comment": "Declaration keywords — blue",
+      "name": "storage.type",
+      "match": "\\b(var|local|const|type|use|mod|pub|lambda|self|let|Self|impl|module|extern|public|static)\\b"
+    },
+
+    {
+      "comment": "Control flow keywords — purple",
+      "name": "keyword.control",
+      "match": "\\b(borrow|ref|func|class|trait|struct|life|enum|if|elif|else|for|while|loop|forever|return|break|continue|match|when|then|do|in|as|move|unsafe|scope|try|catch|import|from|end|and|or|not|is|by|with|default|repeat|until|mutable|call|close|back|have|ignore|Ignore|box|store|case)\\b"
+    },
+
+    {
+      "comment": "Primitive types — green",
+      "name": "support.type",
+      "match": "\\b(int|uint|float|str|bool|char|void|any|usize|isize|utf|int8|int16|int32|int64|uint8|uint16|uint32|uint64|float32|float64)\\b"
+    },
+
+    {
+      "comment": "Uppercase identifiers = types — green",
+      "name": "support.type",
+      "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
+    },
+
+    {
+      "comment": "Function calls — yellow",
+      "match": "\\b([a-z_][a-zA-Z0-9_]*)\\s*(?=\\()",
+      "captures": {
+        "1": { "name": "entity.name.function" }
+      }
+    },
+
+    {
+      "comment": "Method calls after dot — yellow",
+      "match": "(?<=\\.)([a-z_][a-zA-Z0-9_]*)\\s*(?=\\()",
+      "captures": {
+        "1": { "name": "entity.name.function" }
+      }
+    },
+
+    {
+      "comment": "Operators",
+      "name": "keyword.operator",
+      "match": "[+\\-*/%=<>!&|^~?]+"
+    },
+
+    {
+      "comment": "Punctuation — no color",
+      "name": "punctuation.separator",
+      "match": "[,;:\\.]"
+    },
+
+    {
+      "comment": "Brackets — no color",
+      "name": "punctuation.section",
+      "match": "[\\[\\](){}]"
+    }
+
+  ],
+
+  "repository": {
+    "insideParens": {
+      "patterns": [
+        { "include": "$self" }
+      ]
+    }
+  }
+} 
